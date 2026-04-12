@@ -528,6 +528,7 @@ function toggleTheme() { darkMode = !darkMode; applyTheme(); }
 // ============================================================
 function entrerClasse(classe) {
   classeActive = classe;
+  localStorage.setItem('dieng_classe', classe);
   document.getElementById('screen-classe').style.display = 'none';
   document.getElementById('screen-main').style.display   = 'block';
   document.getElementById('headerClasse').textContent     = classe;
@@ -536,6 +537,7 @@ function entrerClasse(classe) {
 
 function retourAccueil() {
   classeActive = null;
+  localStorage.removeItem('dieng_classe');
   document.getElementById('screen-main').style.display   = 'none';
   document.getElementById('screen-classe').style.display = 'flex';
 }
@@ -585,17 +587,10 @@ const DOCS_DROPBOX = {
     {
       id: '2', title: 'S2 - Cours Limites de fonction', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
       ...makeDropboxUrls('https://www.dropbox.com/scl/fi/cjg96glbq6i25bfzkyo33/S2-Cours-Limites-de-fonction.pdf?rlkey=6t35smvulubglv9ne9ais3yj3&dl=0'),
-    }, 
-    {
-      id: '3', title: 'S3 - Cours Continuité et convexité', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
-      ...makeDropboxUrls('https://www.dropbox.com/scl/fi/yfsd2myclb3rc863xsvm6/S3-Cours-Continuit-et-convexit.pdf?rlkey=rbhkwsde6m90a8wko5lz5ve64&dl=0'),
     },
   ],
   'Tle STMG': [
-     {
-      id: '3', title: 'S3 - TD Continuité et convexité', cat: 'Exercices', catBase: 'Exercices', ext: 'pdf',
-      ...makeDropboxUrls('https://www.dropbox.com/scl/fi/yfsd2myclb3rc863xsvm6/S3-Cours-Continuit-et-convexit.pdf?rlkey=rbhkwsde6m90a8wko5lz5ve64&dl=0'),
-    },
+    // Ajoutez vos fichiers ici
   ],
   'Tle Complémentaires': [],
   '1ère Spécialité': [],
@@ -619,6 +614,12 @@ const dropboxCache = {};
 
 async function getDocsForClasse(classe) {
   return DOCS_DROPBOX[classe] || [];
+}
+
+// Restaurer la classe au rechargement de la page
+const _savedClasse = localStorage.getItem('dieng_classe');
+if (_savedClasse && DOCS_DROPBOX[_savedClasse] !== undefined) {
+  entrerClasse(_savedClasse);
 }
 
 // ============================================================
