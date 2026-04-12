@@ -821,16 +821,37 @@ function uploadDoc() {
 }
 
 // ============================================================
-//  CONFIGURATION DROPBOX
+//  DOCUMENTS DROPBOX (liens directs)
+//  Pour ajouter un fichier : ajoutez une entrée dans DOCS_DROPBOX
+//  previewUrl : lien Dropbox avec ?dl=0 remplacé par rien
+//  downloadUrl : lien Dropbox avec dl=1
 // ============================================================
 
-const DROPBOX_FOLDERS = {
-  'Tle Spécialité':      '/Cours-Maths-Dieng/Tle-Specialite',
-  'Tle STMG':            '/Cours-Maths-Dieng/Tle-STMG',
-  'Tle Complémentaires': '/Cours-Maths-Dieng/Tle-Complementaires',
-  '1ère Spécialité':     '/Cours-Maths-Dieng/1ere-Specialite',
-  '1ère STMG':           '/Cours-Maths-Dieng/1ere-STMG',
-  '1ère Spécifique':     '/Cours-Maths-Dieng/1ere-Specifique',
+function makeDropboxUrls(lien) {
+  const base = lien.replace('?dl=0', '');
+  const preview  = base;
+  const download = base + '?dl=1';
+  return { previewUrl: preview, downloadUrl: download };
+}
+
+const DOCS_DROPBOX = {
+  'Tle Spécialité': [
+    {
+      id: '1', title: 'S1 - Cours Récurrence et Suites', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
+      ...makeDropboxUrls('https://www.dropbox.com/scl/fi/jujnlv8c2wxl4tv0j9rrw/S1-Cours-R-currence-et-Suites.pdf?rlkey=oiky4n13gepygmpuxbhttu2au&dl=0'),
+    },
+    {
+      id: '2', title: 'S2 - Cours Limites de fonction', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
+      ...makeDropboxUrls('https://www.dropbox.com/scl/fi/cjg96glbq6i25bfzkyo33/S2-Cours-Limites-de-fonction.pdf?rlkey=6t35smvulubglv9ne9ais3yj3&dl=0'),
+    },
+  ],
+  'Tle STMG': [
+    // Ajoutez vos fichiers ici
+  ],
+  'Tle Complémentaires': [],
+  '1ère Spécialité': [],
+  '1ère STMG': [],
+  '1ère Spécifique': [],
 };
 
 // Catégories détectées automatiquement depuis le nom du fichier
@@ -844,27 +865,11 @@ function detectCat(name) {
   return 'Autres';
 }
 
-// Charger les fichiers via la fonction Netlify
-async function loadDropboxFolder(classe) {
-  try {
-    const url = `/.netlify/functions/dropbox?classe=${encodeURIComponent(classe)}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Erreur réseau');
-    return await res.json();
-  } catch(e) {
-    console.error('Erreur chargement:', e);
-    return [];
-  }
-}
-
-// Cache des fichiers Dropbox par classe
+// Cache des fichiers par classe
 const dropboxCache = {};
 
 async function getDocsForClasse(classe) {
-  if (dropboxCache[classe]) return dropboxCache[classe];
-  const files = await loadDropboxFolder(classe);
-  dropboxCache[classe] = files;
-  return files;
+  return DOCS_DROPBOX[classe] || [];
 }
 
 // ============================================================
