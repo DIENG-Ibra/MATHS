@@ -101,7 +101,7 @@
     }
     .screen-title em { color: #93c5fd; font-style: normal; }
 
-    /* Zone des cartes — fond bleu clair */
+    /* Fond mathématique filigrane zone cartes */
     .classe-grid-wrap {
       position: relative; z-index: 2;
       width: 100%; display: flex; flex-direction: column; align-items: center;
@@ -109,6 +109,16 @@
       background: var(--accent-light);
       flex: 1;
     }
+    .classe-grid-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Ctext x='10' y='80' font-family='Georgia,serif' font-size='56' fill='%23888' opacity='0.07'%3Eax%C2%B2%2Bbx%3C/text%3E%3Ctext x='260' y='60' font-family='Georgia,serif' font-size='60' fill='%23888' opacity='0.07'%3E%E2%89%A0%3C/text%3E%3Ctext x='370' y='90' font-family='Georgia,serif' font-size='64' fill='%23888' opacity='0.07'%3E%CE%BB%3C/text%3E%3Ctext x='30' y='200' font-family='Georgia,serif' font-size='62' fill='%23888' opacity='0.07'%3Esin x%3C/text%3E%3Ctext x='220' y='210' font-family='Georgia,serif' font-size='66' fill='%23888' opacity='0.07'%3E%CE%BC%3C/text%3E%3Ctext x='350' y='195' font-family='Georgia,serif' font-size='58' fill='%23888' opacity='0.07'%3E%E2%88%82%3C/text%3E%3Ctext x='10' y='330' font-family='Georgia,serif' font-size='60' fill='%23888' opacity='0.07'%3E%E2%88%88 %E2%84%9D%3C/text%3E%3Ctext x='220' y='320' font-family='Georgia,serif' font-size='64' fill='%23888' opacity='0.07'%3E%CE%B3%3C/text%3E%3Ctext x='360' y='340' font-family='Georgia,serif' font-size='58' fill='%23888' opacity='0.07'%3En!%3C/text%3E%3Ctext x='40' y='455' font-family='Georgia,serif' font-size='62' fill='%23888' opacity='0.07'%3Etan %CE%B8%3C/text%3E%3Ctext x='230' y='465' font-family='Georgia,serif' font-size='58' fill='%23888' opacity='0.07'%3E%E2%89%88%3C/text%3E%3Ctext x='360' y='450' font-family='Georgia,serif' font-size='64' fill='%23888' opacity='0.07'%3E%E2%84%95%3C/text%3E%3C/svg%3E");
+      background-size: 500px 500px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .classe-grid-wrap > * { position: relative; z-index: 1; }
 
     .screen-sub {
       color: var(--accent); font-size: 0.95rem;
@@ -253,18 +263,11 @@
       min-height: calc(100vh - 120px);
     }
     #view-docs::before {
-      content: '∑ ∫ π √ ∞ Δ θ α β γ λ μ ∀ ∃ ≤ ≥ ± × ÷ f(x) lim cos sin';
+      content: '';
       position: fixed;
       inset: 0;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 1.4rem;
-      color: var(--accent);
-      opacity: 0.04;
-      word-spacing: 2.5rem;
-      line-height: 4rem;
-      letter-spacing: 0.5rem;
-      padding: 2rem;
-      overflow: hidden;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Ctext x='20' y='80' font-family='Georgia,serif' font-size='72' fill='%23888' opacity='0.09'%3E∑%3C/text%3E%3Ctext x='150' y='60' font-family='Georgia,serif' font-size='58' fill='%23888' opacity='0.08'%3E∫%3C/text%3E%3Ctext x='270' y='90' font-family='Georgia,serif' font-size='66' fill='%23888' opacity='0.09'%3Eπ%3C/text%3E%3Ctext x='370' y='70' font-family='Georgia,serif' font-size='52' fill='%23888' opacity='0.08'%3E√x%3C/text%3E%3Ctext x='40' y='200' font-family='Georgia,serif' font-size='54' fill='%23888' opacity='0.08'%3Ef(x)%3C/text%3E%3Ctext x='210' y='210' font-family='Georgia,serif' font-size='70' fill='%23888' opacity='0.09'%3E∞%3C/text%3E%3Ctext x='370' y='190' font-family='Georgia,serif' font-size='58' fill='%23888' opacity='0.08'%3Eθ%3C/text%3E%3Ctext x='20' y='330' font-family='Georgia,serif' font-size='52' fill='%23888' opacity='0.08'%3Eα²+β²%3C/text%3E%3Ctext x='230' y='320' font-family='Georgia,serif' font-size='64' fill='%23888' opacity='0.09'%3EΔ%3C/text%3E%3Ctext x='370' y='340' font-family='Georgia,serif' font-size='54' fill='%23888' opacity='0.08'%3Elim%3C/text%3E%3Ctext x='60' y='450' font-family='Georgia,serif' font-size='62' fill='%23888' opacity='0.09'%3Ex²%3C/text%3E%3Ctext x='200' y='470' font-family='Georgia,serif' font-size='52' fill='%23888' opacity='0.08'%3Ecos θ%3C/text%3E%3Ctext x='370' y='460' font-family='Georgia,serif' font-size='58' fill='%23888' opacity='0.09'%3E∀ε%3C/text%3E%3C/svg%3E");
+      background-size: 500px 500px;
       pointer-events: none;
       z-index: 0;
     }
@@ -564,7 +567,6 @@
       <span class="header-classe" id="headerClasse"></span>
     </div>
     <div class="header-right">
-      <button class="nav-btn active" id="btnDocs" onclick="showTab('docs')">📚 Documents</button>
       <button class="theme-toggle" id="themeMain" onclick="toggleTheme()">🌙</button>
     </div>
   </header>
