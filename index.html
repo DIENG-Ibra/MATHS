@@ -617,47 +617,25 @@
   <!-- VUE DÉPÔT (prof) -->
   <div id="view-depot" style="display:none">
     <div style="max-width:820px; margin:0 auto; padding:2rem 1.5rem;">
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" multiple accept=".pdf,.tex,.docx,.png,.jpg,.zip,.pptx"/>
-        <span class="upload-icon">📂</span>
-        <h3>Glisser-déposer ou cliquer pour choisir</h3>
-        <p>PDF, LaTeX, Word, PowerPoint, images, archives</p>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">📦</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.75rem;">Gestion via Dropbox</h3>
+        <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;margin-bottom:1.5rem;">
+          Les documents sont hébergés directement sur <strong>Dropbox</strong>.<br>
+          Pour ajouter, modifier ou supprimer un fichier, ouvrez le dossier correspondant à la classe sur Dropbox.
+        </p>
+
+        <div id="dropboxLinks" style="display:flex;flex-direction:column;gap:0.65rem;max-width:420px;margin:0 auto;">
+          <!-- rempli par JS -->
+        </div>
+
+        <p style="color:var(--muted);font-size:0.75rem;margin-top:1.5rem;">
+          💡 Les fichiers PDF déposés dans Dropbox apparaissent automatiquement ici après rechargement.
+        </p>
+        <button onclick="invalidateCache()" style="margin-top:1rem;background:var(--accent);color:#fff;border:none;border-radius:9px;padding:0.6rem 1.4rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer;transition:background 0.2s;">🔄 Rafraîchir les documents</button>
       </div>
 
-      <div class="upload-meta">
-        <div class="field">
-          <label>Classe</label>
-          <select id="selClasse">
-            <option value="Tle Spécialité">Tle Spécialité</option>
-            <option value="Tle STMG">Tle STMG</option>
-            <option value="Tle Complémentaires">Tle Complémentaires</option>
-            <option value="1ère Spécialité">1ère Spécialité</option>
-            <option value="1ère STMG">1ère STMG</option>
-            <option value="1ère Spécifique">1ère Spécifique</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Catégorie</label>
-          <div class="cat-badges" id="catBadges">
-            <span class="cat-badge active" data-cat="Cours">Cours</span>
-            <span class="cat-badge" data-cat="Exercices">Exercices</span>
-            <span class="cat-badge" data-cat="Évaluation">Évaluation</span>
-            <span class="cat-badge" data-cat="Autres">Autres</span>
-          </div>
-          <!-- Champ libre pour "Autres" -->
-          <input type="text" class="autre-input" id="autreLabel"
-                 placeholder="Précisez (ex. Devoir Maison, Brevet blanc…)"/>
-        </div>
-        <div class="field full">
-          <label>Titre du document</label>
-          <input type="text" id="docTitle" placeholder="ex. Séquence 9 — Intégrales (IPP)"/>
-        </div>
-        <div class="field full">
-          <label>Description (optionnel)</label>
-          <input type="text" id="docDesc" placeholder="ex. Correction incluse, à rendre pour le 20 avril"/>
-        </div>
-      </div>
-      <button class="btn-upload" onclick="uploadDoc()">✦ Déposer le document</button>
     </div>
   </div>
 
@@ -674,11 +652,11 @@ const MOT_DE_PASSE = 'Dieng2024!';
 // ============================================================
 //  STATE
 // ============================================================
-let docs        = JSON.parse(localStorage.getItem('dieng_docs2') || '[]');
+let docs        = []; // conservé pour compatibilité mais non utilisé (données depuis Dropbox)
 let isProf      = false;
 let classeActive = null;
 let catActive    = 'all';
-let selectedCat  = 'Cours';
+let selectedCat  = 'Cours'; // conservé pour compatibilité
 let darkMode     = localStorage.getItem('dieng_theme') === 'dark';
 
 // ============================================================
@@ -729,6 +707,7 @@ function showTab(tab) {
   document.getElementById('btnDocs').classList.toggle('active',  tab === 'docs');
   document.getElementById('btnDepot').classList.toggle('active', tab === 'depot');
   if (tab === 'docs') renderDocs();
+  if (tab === 'depot') renderDropboxLinks();
 }
 
 // ============================================================
@@ -800,32 +779,37 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 // ============================================================
-//  CAT BADGES (formulaire dépôt)
+//  LIENS DROPBOX (vue dépôt)
 // ============================================================
-document.getElementById('catBadges').addEventListener('click', e => {
-  const b = e.target.closest('.cat-badge');
-  if (!b) return;
-  selectedCat = b.dataset.cat;
-  document.querySelectorAll('.cat-badge').forEach(x => x.classList.toggle('active', x === b));
-  document.getElementById('autreLabel').classList.toggle('visible', selectedCat === 'Autres');
-});
+const DROPBOX_WEB_LINKS = {
+  'Tle Spécialité':      'https://www.dropbox.com/home/Cours-Maths-Dieng/Tle-Specialite',
+  'Tle STMG':            'https://www.dropbox.com/home/Cours-Maths-Dieng/Tle-STMG',
+  'Tle Complémentaires': 'https://www.dropbox.com/home/Cours-Maths-Dieng/Tle-Complementaires',
+  '1ère Spécialité':     'https://www.dropbox.com/home/Cours-Maths-Dieng/1ere-Specialite',
+  '1ère STMG':           'https://www.dropbox.com/home/Cours-Maths-Dieng/1ere-STMG',
+  '1ère Spécifique':     'https://www.dropbox.com/home/Cours-Maths-Dieng/1ere-Specifique',
+};
 
-// ============================================================
-//  DRAG & DROP
-// ============================================================
-const zone = document.getElementById('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-zone.addEventListener('drop', e => {
-  e.preventDefault(); zone.classList.remove('drag-over');
-  handleFiles(e.dataTransfer.files);
-});
-document.getElementById('fileInput').addEventListener('change', e => handleFiles(e.target.files));
-function handleFiles(files) {
-  if (!files.length) return;
-  const t = document.getElementById('docTitle');
-  if (!t.value && files.length === 1) t.value = files[0].name.replace(/\.[^.]+$/, '');
-  toast(`📎 ${files.length} fichier(s) sélectionné(s)`, 'ok');
+function renderDropboxLinks() {
+  const container = document.getElementById('dropboxLinks');
+  if (!container) return;
+  container.innerHTML = Object.entries(DROPBOX_WEB_LINKS).map(([label, url]) => `
+    <a href="${url}" target="_blank" rel="noopener"
+       style="display:flex;align-items:center;justify-content:space-between;
+              background:var(--surface2);border:1px solid var(--border);
+              border-radius:10px;padding:0.65rem 1rem;text-decoration:none;
+              color:var(--text);font-size:0.875rem;transition:all 0.2s;"
+       onmouseover="this.style.borderColor='var(--accent)'"
+       onmouseout="this.style.borderColor='var(--border)'">
+      <span>📁 ${label}</span>
+      <span style="color:var(--accent);font-size:0.75rem;">Ouvrir ↗</span>
+    </a>`).join('');
+}
+
+function invalidateCache() {
+  Object.keys(dropboxCache).forEach(k => delete dropboxCache[k]);
+  toast('🔄 Cache vidé. Rechargement en cours…', 'ok');
+  renderDocs();
 }
 
 // ============================================================
@@ -833,117 +817,20 @@ function handleFiles(files) {
 // ============================================================
 function uploadDoc() {
   if (!isProf) return;
-  const title    = document.getElementById('docTitle').value.trim();
-  const desc     = document.getElementById('docDesc').value.trim();
-  const classe   = document.getElementById('selClasse').value;
-  const files    = document.getElementById('fileInput').files;
-  const autreLib = document.getElementById('autreLabel').value.trim();
-
-  if (!title) { toast('⚠️ Veuillez saisir un titre.', 'err'); return; }
-
-  const fileName = files.length > 0 ? files[0].name : 'document.pdf';
-  const ext      = fileName.split('.').pop().toLowerCase();
-  const catLabel = selectedCat === 'Autres' && autreLib ? autreLib : selectedCat;
-
-  docs.unshift({
-    id: Date.now(), title, desc, classe,
-    cat: catLabel, catBase: selectedCat,
-    fileName, ext,
-    date: new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' })
-  });
-  localStorage.setItem('dieng_docs2', JSON.stringify(docs));
-
-  document.getElementById('docTitle').value = '';
-  document.getElementById('docDesc').value  = '';
-  document.getElementById('autreLabel').value = '';
-  document.getElementById('fileInput').value  = '';
-
-  toast(`✅ "${title}" déposé pour ${classe}.`, 'ok');
-  showTab('docs');
-}
-
-// ============================================================
-//  RENDU DOCUMENTS
-// ============================================================
-function renderDocs() {
-  if (!classeActive) return;
-  const q = (document.getElementById('searchInput').value || '').toLowerCase();
-
-  const filtered = docs.filter(d => {
-    if (d.classe !== classeActive) return false;
-    if (catActive !== 'all' && d.catBase !== catActive) return false;
-    if (q && !d.title.toLowerCase().includes(q) && !d.cat.toLowerCase().includes(q)) return false;
-    return true;
-  });
-
-  const catName = catActive === 'all' ? 'Tous les documents' : catActive;
-  document.getElementById('docsTitle').textContent = catName;
-  document.getElementById('docCount').textContent  =
-    `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
-
-  const list = document.getElementById('docsList');
-  if (!filtered.length) {
-    list.innerHTML = `<div class="empty">
-      <div class="ei">📭</div>
-      <p>Aucun document disponible pour le moment.<br>
-      ${isProf ? 'Déposez un document via l\'onglet "Déposer".' : 'Revenez bientôt !'}</p>
-    </div>`;
-    return;
-  }
-
-  // Trier par titre (ordre naturel : S1, S2, S3…)
-  const sorted = [...filtered].sort((a, b) =>
-    a.title.localeCompare(b.title, 'fr', { numeric: true })
-  );
-
-  const rows = sorted.map((d, i) => `
-    <div class="doc-row" style="animation-delay:${i*0.03}s">
-      <span class="doc-row-num">${i + 1}</span>
-      <div class="doc-row-icon">${iconSVG(d.ext)}</div>
-      <div class="doc-row-info">
-        <span class="doc-row-title" onclick="dlDoc(${d.id})">${d.title}</span>
-        ${d.desc ? `<div class="doc-row-desc">${d.desc}</div>` : ''}
-      </div>
-      <div class="doc-row-right">
-        <span class="badge badge-${d.catBase.toLowerCase()}">${d.cat}</span>
-        ${isProf ? `<button class="btn-del" onclick="delDoc(${d.id})" title="Supprimer">🗑</button>` : ''}
-      </div>
-    </div>`).join('');
-
-  list.innerHTML = `
-    <div class="docs-bloc">
-      <div class="docs-bloc-header">
-        <span>${filtered.length} document${filtered.length > 1 ? 's' : ''}</span>
-        <span>Cliquer sur le titre pour consulter</span>
-      </div>
-      ${rows}
-    </div>`;
-}
-
-function iconSVG(ext) {
-  const colors = { pdf:'#e53e3e', tex:'#2563eb', docx:'#2563eb', doc:'#2563eb', pptx:'#d97706', zip:'#64748b', gz:'#64748b', png:'#16a34a', jpg:'#16a34a', jpeg:'#16a34a' };
-  const labels = { pdf:'PDF', tex:'TEX', docx:'DOC', doc:'DOC', pptx:'PPT', zip:'ZIP', gz:'GZ', png:'IMG', jpg:'IMG', jpeg:'IMG' };
-  const color = colors[ext] || '#64748b';
-  const label = labels[ext] || ext.toUpperCase().slice(0,3);
-  return `<svg viewBox="0 0 38 46" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="1" width="30" height="40" rx="4" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
-    <path d="M22 1 L31 10 L22 10 Z" fill="${color}" opacity="0.15"/>
-    <path d="M22 1 L22 10 L31 10" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
-    <rect x="0" y="28" width="38" height="14" rx="3" fill="${color}"/>
-    <text x="19" y="38.5" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="white" letter-spacing="0.5">${label}</text>
-  </svg>`;
+  toast('📂 Pour ajouter un document, déposez le fichier PDF directement dans le dossier Dropbox correspondant à la classe. Il apparaîtra automatiquement ici.', 'ok');
 }
 
 // ============================================================
 //  CONFIGURATION DROPBOX
 // ============================================================
+
 const DROPBOX_FOLDERS = {
-  'Tle Spécialité':      { key: 'aizefsrub1cw3s55i71ru', rlkey: 'y54y7wjhag1vn8vhwhr51l05l' },
-  'Tle STMG':            { key: 'c95tbi41vkw8pjzdfvpkx', rlkey: 'awq9p8cu8tppzj7ipjyuic8z8' },
-  'Tle Complémentaires': { key: 'y46qn2dueqcrka8l0htry', rlkey: 'ixy0495clh21z8k6aszn2qwpf' },
-  '1ère Spécialité':     { key: 't8d9gdwaltxtikiqo5a7v', rlkey: 'p321pxcg2hhrw0qye2yfibdbp' },
-  '1ère STMG':           { key: '8lbllrhdfbwojmtooavrv', rlkey: 'tya6tc6f0chhbtsd395kbxpa6' },
-  '1ère Spécifique':     { key: '1leove3uo0nw6wp2osiit', rlkey: 'k2p3b3bdc7ze6p0mr1seei27h' },
+  'Tle Spécialité':      '/Cours-Maths-Dieng/Tle-Specialite',
+  'Tle STMG':            '/Cours-Maths-Dieng/Tle-STMG',
+  'Tle Complémentaires': '/Cours-Maths-Dieng/Tle-Complementaires',
+  '1ère Spécialité':     '/Cours-Maths-Dieng/1ere-Specialite',
+  '1ère STMG':           '/Cours-Maths-Dieng/1ere-STMG',
+  '1ère Spécifique':     '/Cours-Maths-Dieng/1ere-Specifique',
 };
 
 // Catégories détectées automatiquement depuis le nom du fichier
@@ -955,13 +842,6 @@ function detectCat(name) {
   if (n.includes('eval') || n.includes('dst') || n.includes('bac') || n.includes('controle') || n.includes('devoir')) return 'Évaluation';
   if (n.includes('exo') || n.includes('exercice') || n.includes('td') || n.includes('qcm')) return 'Exercices';
   return 'Autres';
-}
-
-function detectCatBase(cat) { return cat; }
-
-// Convertir lien Dropbox en lien direct de téléchargement
-function dropboxDirectLink(key, rlkey, filename) {
-  return `https://www.dropbox.com/scl/fi/${key}/${encodeURIComponent(filename)}?rlkey=${rlkey}&dl=1`;
 }
 
 // Charger les fichiers via la fonction Netlify
