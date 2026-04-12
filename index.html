@@ -247,6 +247,22 @@
     /* ===== CONTENU PRINCIPAL ===== */
     #screen-main { display: none; }
 
+    /* Fond mathématique en filigrane */
+    #view-docs {
+      position: relative;
+      min-height: calc(100vh - 120px);
+    }
+    #view-docs::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Ctext x='20' y='60' font-family='serif' font-size='42' fill='%231a56db' opacity='0.045'%3E∑%3C/text%3E%3Ctext x='120' y='40' font-family='serif' font-size='32' fill='%231a56db' opacity='0.04'%3E∫%3C/text%3E%3Ctext x='200' y='70' font-family='serif' font-size='36' fill='%231a56db' opacity='0.045'%3Eπ%3C/text%3E%3Ctext x='300' y='50' font-family='serif' font-size='28' fill='%231a56db' opacity='0.04'%3E√x%3C/text%3E%3Ctext x='60' y='150' font-family='serif' font-size='30' fill='%231a56db' opacity='0.04'%3Ef(x)%3C/text%3E%3Ctext x='180' y='160' font-family='serif' font-size='40' fill='%231a56db' opacity='0.045'%3E∞%3C/text%3E%3Ctext x='310' y='140' font-family='serif' font-size='26' fill='%231a56db' opacity='0.04'%3Eθ%3C/text%3E%3Ctext x='30' y='250' font-family='serif' font-size='28' fill='%231a56db' opacity='0.04'%3Eα²+β²%3C/text%3E%3Ctext x='190' y='240' font-family='serif' font-size='34' fill='%231a56db' opacity='0.045'%3EΔ%3C/text%3E%3Ctext x='310' y='260' font-family='serif' font-size='30' fill='%231a56db' opacity='0.04'%3Elim%3C/text%3E%3Ctext x='70' y='340' font-family='serif' font-size='36' fill='%231a56db' opacity='0.045'%3Ex²%3C/text%3E%3Ctext x='180' y='360' font-family='serif' font-size='28' fill='%231a56db' opacity='0.04'%3Ecos θ%3C/text%3E%3Ctext x='300' y='350' font-family='serif' font-size='32' fill='%231a56db' opacity='0.045'%3E∀ε%3C/text%3E%3C/svg%3E");
+      background-size: 400px 400px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #view-docs > * { position: relative; z-index: 1; }
+
     /* ===== MODAL OVERLAY (PDF) ===== */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 300;
