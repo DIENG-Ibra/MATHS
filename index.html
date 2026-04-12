@@ -148,14 +148,7 @@
       content: ''; flex: 1; height: 1px; background: var(--border);
     }
 
-    .screen-prof-link {
-      margin-top: 2.5rem;
-      background: none; border: 1px solid var(--border);
-      color: var(--muted); font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem; padding: 0.5rem 1.2rem; border-radius: 100px;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .screen-prof-link:hover { border-color: var(--accent); color: var(--accent); }
+
 
     .theme-btn-home {
       width: 38px; height: 38px; border-radius: 50%;
@@ -199,12 +192,7 @@
     }
     .nav-btn:hover { background: var(--surface2); color: var(--text); }
     .nav-btn.active { background: var(--accent); color: #fff; font-weight: 500; }
-    .prof-badge {
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      background: rgba(22,163,74,0.12); color: var(--success);
-      border: 1px solid rgba(22,163,74,0.3);
-      padding: 0.25rem 0.65rem; border-radius: 100px;
-    }
+
     .theme-toggle {
       width: 34px; height: 34px; border-radius: 50%;
       border: 1px solid var(--border); background: var(--surface);
@@ -214,48 +202,7 @@
     }
     .theme-toggle:hover { border-color: var(--accent); }
 
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 300;
-      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem; width: 100%; max-width: 360px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      animation: popIn 0.25s ease;
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.92); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-    .modal h2 { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: 0.4rem; }
-    .modal p  { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
-    .modal input {
-      width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text); padding: 0.7rem 1rem; border-radius: 9px;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
-      outline: none; transition: border-color 0.2s; margin-bottom: 0.6rem;
-    }
-    .modal input:focus { border-color: var(--accent); }
-    .modal-error { color: var(--danger); font-size: 0.78rem; margin-bottom: 0.6rem; display: none; }
-    .modal-btns { display: flex; gap: 0.5rem; }
-    .btn-primary {
-      flex: 1; background: var(--accent); color: #fff;
-      border: none; border-radius: 9px; padding: 0.7rem;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-primary:hover { background: var(--accent2); }
-    .btn-cancel {
-      background: var(--surface2); color: var(--muted);
-      border: 1px solid var(--border); border-radius: 9px; padding: 0.7rem 1rem;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-cancel:hover { background: var(--border); }
+
 
     /* ===== CONTENU PRINCIPAL ===== */
     #screen-main { display: none; }
@@ -277,60 +224,7 @@
     .cat-tab:hover { color: var(--accent); }
     .cat-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
 
-    /* ===== ZONE DEPOT (prof) ===== */
-    #view-depot { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
-    .upload-zone {
-      border: 2px dashed var(--border); border-radius: var(--radius);
-      padding: 2.5rem 2rem; text-align: center; cursor: pointer;
-      transition: all 0.3s; position: relative;
-      background: var(--surface); box-shadow: var(--shadow);
-    }
-    .upload-zone:hover, .upload-zone.drag-over {
-      border-color: var(--accent); background: var(--accent-light);
-    }
-    .upload-zone input[type=file] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-    }
-    .upload-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
-    .upload-zone h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.4rem; }
-    .upload-zone p  { color: var(--muted); font-size: 0.8rem; }
-    .upload-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-    .field { display: flex; flex-direction: column; gap: 0.35rem; }
-    .field label {
-      font-size: 0.7rem; font-family: 'DM Mono', monospace;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
-    }
-    .field select, .field input[type=text] {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text); padding: 0.55rem 0.9rem; border-radius: 8px;
-      font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
-      outline: none; transition: border-color 0.2s;
-    }
-    .field select:focus, .field input[type=text]:focus { border-color: var(--accent); }
-    .field.full { grid-column: 1 / -1; }
-    .cat-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .cat-badge {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--muted); font-size: 0.78rem; padding: 0.35rem 0.85rem;
-      border-radius: 100px; cursor: pointer; transition: all 0.2s;
-    }
-    .cat-badge:hover { border-color: var(--accent); color: var(--accent); }
-    .cat-badge.active {
-      background: var(--accent-light); border-color: var(--accent);
-      color: var(--accent); font-weight: 500;
-    }
-    .autre-input {
-      margin-top: 0.5rem; display: none;
-    }
-    .autre-input.visible { display: block; }
-    .btn-upload {
-      margin-top: 1.5rem; width: 100%;
-      background: var(--accent); color: #fff;
-      border: none; border-radius: 10px; padding: 0.8rem;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-upload:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.25); }
+
 
     /* ===== LISTE DE DOCUMENTS ===== */
     #view-docs { padding: 1.5rem; }
@@ -534,7 +428,6 @@
 
   </div>
 
-  <button class="screen-prof-link" onclick="ouvrirModalProf()">🔐 Accès Professeur</button>
 </div>
 
 <!-- ===================== MODAL LECTEUR PDF ===================== -->
@@ -560,21 +453,6 @@
   </div>
 </div>
 
-<!-- ===================== MODAL MOT DE PASSE ===================== -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h2>🔐 Espace Professeur</h2>
-    <p>Entrez le mot de passe pour accéder à la gestion des documents.</p>
-    <input type="password" id="pwdInput" placeholder="Mot de passe…"
-           onkeydown="if(event.key==='Enter') checkPassword()"/>
-    <div class="modal-error" id="pwdError">❌ Mot de passe incorrect.</div>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
-      <button class="btn-primary" onclick="checkPassword()">Connexion</button>
-    </div>
-  </div>
-</div>
-
 <!-- ===================== ÉCRAN PRINCIPAL ===================== -->
 <div id="screen-main">
 
@@ -585,10 +463,7 @@
       <span class="header-classe" id="headerClasse"></span>
     </div>
     <div class="header-right">
-      <span class="prof-badge" id="profBadge" style="display:none">👨‍🏫 Professeur</span>
       <button class="nav-btn active" id="btnDocs" onclick="showTab('docs')">📚 Documents</button>
-      <button class="nav-btn" id="btnDepot" onclick="handleProfNav()" style="display:none">📤 Déposer</button>
-      <button class="nav-btn" id="btnProf" onclick="handleProfBtn()">🔐 Prof</button>
       <button class="theme-toggle" id="themeMain" onclick="toggleTheme()">🌙</button>
     </div>
   </header>
@@ -614,49 +489,16 @@
     </div>
   </div>
 
-  <!-- VUE DÉPÔT (prof) -->
-  <div id="view-depot" style="display:none">
-    <div style="max-width:820px; margin:0 auto; padding:2rem 1.5rem;">
-
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);text-align:center;">
-        <div style="font-size:2.5rem;margin-bottom:1rem;">📦</div>
-        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.75rem;">Gestion via Dropbox</h3>
-        <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;margin-bottom:1.5rem;">
-          Les documents sont hébergés directement sur <strong>Dropbox</strong>.<br>
-          Pour ajouter, modifier ou supprimer un fichier, ouvrez le dossier correspondant à la classe sur Dropbox.
-        </p>
-
-        <div id="dropboxLinks" style="display:flex;flex-direction:column;gap:0.65rem;max-width:420px;margin:0 auto;">
-          <!-- rempli par JS -->
-        </div>
-
-        <p style="color:var(--muted);font-size:0.75rem;margin-top:1.5rem;">
-          💡 Les fichiers PDF déposés dans Dropbox apparaissent automatiquement ici après rechargement.
-        </p>
-        <button onclick="invalidateCache()" style="margin-top:1rem;background:var(--accent);color:#fff;border:none;border-radius:9px;padding:0.6rem 1.4rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer;transition:background 0.2s;">🔄 Rafraîchir les documents</button>
-      </div>
-
-    </div>
-  </div>
-
 </div><!-- fin screen-main -->
 
 <div class="toast" id="toast"></div>
 
 <script>
 // ============================================================
-//  CONFIG
-// ============================================================
-const MOT_DE_PASSE = 'Dieng2024!';
-
-// ============================================================
 //  STATE
 // ============================================================
-let docs        = []; // conservé pour compatibilité mais non utilisé (données depuis Dropbox)
-let isProf      = false;
 let classeActive = null;
 let catActive    = 'all';
-let selectedCat  = 'Cours'; // conservé pour compatibilité
 let darkMode     = localStorage.getItem('dieng_theme') === 'dark';
 
 // ============================================================
@@ -681,33 +523,22 @@ function entrerClasse(classe) {
   document.getElementById('screen-classe').style.display = 'none';
   document.getElementById('screen-main').style.display   = 'block';
   document.getElementById('headerClasse').textContent     = classe;
-  // Pré-sélectionner la classe dans le formulaire prof
-  const sel = document.getElementById('selClasse');
-  if (sel) sel.value = classe;
   showTab('docs');
 }
 
 function retourAccueil() {
   classeActive = null;
-  isProf = false;
   document.getElementById('screen-main').style.display   = 'none';
   document.getElementById('screen-classe').style.display = 'flex';
-  // Reset UI prof
-  document.getElementById('profBadge').style.display  = 'none';
-  document.getElementById('btnDepot').style.display   = 'none';
-  document.getElementById('btnProf').textContent      = '🔐 Prof';
 }
 
 // ============================================================
 //  ONGLETS (docs / depot)
 // ============================================================
 function showTab(tab) {
-  document.getElementById('view-docs').style.display   = tab === 'docs'  ? 'block' : 'none';
-  document.getElementById('view-depot').style.display  = tab === 'depot' ? 'block' : 'none';
-  document.getElementById('btnDocs').classList.toggle('active',  tab === 'docs');
-  document.getElementById('btnDepot').classList.toggle('active', tab === 'depot');
-  if (tab === 'docs') renderDocs();
-  if (tab === 'depot') renderDropboxLinks();
+  document.getElementById('view-docs').style.display = 'block';
+  document.getElementById('btnDocs').classList.add('active');
+  renderDocs();
 }
 
 // ============================================================
@@ -722,104 +553,7 @@ document.getElementById('catTabs').addEventListener('click', e => {
 });
 
 // ============================================================
-//  ACCÈS PROF
-// ============================================================
-function ouvrirModalProf() { openModal(); }
-function handleProfBtn() {
-  if (isProf) {
-    // Déconnexion
-    isProf = false;
-    document.getElementById('profBadge').style.display = 'none';
-    document.getElementById('btnDepot').style.display  = 'none';
-    document.getElementById('btnProf').textContent     = '🔐 Prof';
-    showTab('docs');
-    toast('👋 Déconnecté.', 'ok');
-  } else {
-    openModal();
-  }
-}
-function handleProfNav() {
-  if (isProf) showTab('depot');
-}
-
-function openModal() {
-  document.getElementById('modalOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('pwdInput').focus(), 100);
-}
-function fermerModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('pwdInput').value = '';
-  document.getElementById('pwdError').style.display = 'none';
-}
-function checkPassword() {
-  const val = document.getElementById('pwdInput').value;
-  if (val === MOT_DE_PASSE) {
-    isProf = true;
-    fermerModal();
-    document.getElementById('profBadge').style.display = 'inline';
-    document.getElementById('btnDepot').style.display  = 'inline-block';
-    document.getElementById('btnProf').textContent     = '🚪 Déconnexion';
-    // Si on est sur l'écran d'accueil, entrer en mode prof (choisir classe)
-    if (!classeActive) {
-      // ouvrir une classe par défaut ou rester sur accueil
-      toast('✅ Connecté. Choisissez une classe.', 'ok');
-    } else {
-      showTab('depot');
-      toast('✅ Bienvenue, M. Dieng !', 'ok');
-    }
-    renderDocs();
-  } else {
-    document.getElementById('pwdError').style.display = 'block';
-    document.getElementById('pwdInput').value = '';
-    document.getElementById('pwdInput').focus();
-  }
-}
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) fermerModal();
-});
-
-// ============================================================
 //  LIENS DROPBOX (vue dépôt)
-// ============================================================
-const DROPBOX_WEB_LINKS = {
-  'Tle Spécialité':      'https://www.dropbox.com/home/Cours-Maths-Dieng/Tle-Specialite',
-  'Tle STMG':            'https://www.dropbox.com/home/Cours-Maths-Dieng/Tle-STMG',
-  'Tle Complémentaires': 'https://www.dropbox.com/home/Cours-Maths-Dieng/Tle-Complementaires',
-  '1ère Spécialité':     'https://www.dropbox.com/home/Cours-Maths-Dieng/1ere-Specialite',
-  '1ère STMG':           'https://www.dropbox.com/home/Cours-Maths-Dieng/1ere-STMG',
-  '1ère Spécifique':     'https://www.dropbox.com/home/Cours-Maths-Dieng/1ere-Specifique',
-};
-
-function renderDropboxLinks() {
-  const container = document.getElementById('dropboxLinks');
-  if (!container) return;
-  container.innerHTML = Object.entries(DROPBOX_WEB_LINKS).map(([label, url]) => `
-    <a href="${url}" target="_blank" rel="noopener"
-       style="display:flex;align-items:center;justify-content:space-between;
-              background:var(--surface2);border:1px solid var(--border);
-              border-radius:10px;padding:0.65rem 1rem;text-decoration:none;
-              color:var(--text);font-size:0.875rem;transition:all 0.2s;"
-       onmouseover="this.style.borderColor='var(--accent)'"
-       onmouseout="this.style.borderColor='var(--border)'">
-      <span>📁 ${label}</span>
-      <span style="color:var(--accent);font-size:0.75rem;">Ouvrir ↗</span>
-    </a>`).join('');
-}
-
-function invalidateCache() {
-  Object.keys(dropboxCache).forEach(k => delete dropboxCache[k]);
-  toast('🔄 Cache vidé. Rechargement en cours…', 'ok');
-  renderDocs();
-}
-
-// ============================================================
-//  UPLOAD
-// ============================================================
-function uploadDoc() {
-  if (!isProf) return;
-  toast('📂 Pour ajouter un document, déposez le fichier PDF directement dans le dossier Dropbox correspondant à la classe. Il apparaîtra automatiquement ici.', 'ok');
-}
-
 // ============================================================
 //  DOCUMENTS DROPBOX (liens directs)
 //  Pour ajouter un fichier : ajoutez une entrée dans DOCS_DROPBOX
@@ -843,10 +577,6 @@ const DOCS_DROPBOX = {
     {
       id: '2', title: 'S2 - Cours Limites de fonction', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
       ...makeDropboxUrls('https://www.dropbox.com/scl/fi/cjg96glbq6i25bfzkyo33/S2-Cours-Limites-de-fonction.pdf?rlkey=6t35smvulubglv9ne9ais3yj3&dl=0'),
-    },
-     {
-      id: '3', title: 'S3 - Cours Continuité et convexité', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
-      ...makeDropboxUrls('https://www.dropbox.com/scl/fi/yfsd2myclb3rc863xsvm6/S3-Cours-Continuit-et-convexit.pdf?rlkey=rbhkwsde6m90a8wko5lz5ve64&dl=0'),
     },
   ],
   'Tle STMG': [
@@ -923,7 +653,6 @@ async function renderDocs() {
       </div>
       <div class="doc-row-right">
         <span class="badge badge-${d.catBase.toLowerCase()}">${d.cat}</span>
-        ${isProf ? `<button class="btn-del" onclick="delDoc('${d.id}')" title="Supprimer">🗑</button>` : ''}
       </div>
     </div>`).join('');
 
@@ -982,10 +711,6 @@ function fermerPDF() {
 document.getElementById('pdfOverlay').addEventListener('click', function(e) {
   if (e.target === this) fermerPDF();
 });
-
-function delDoc(id) {
-  toast('🗑 Pour supprimer un fichier, retirez-le directement de votre dossier Dropbox.', 'err');
-}
 
 // ============================================================
 //  TOAST
