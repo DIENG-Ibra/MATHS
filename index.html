@@ -207,6 +207,14 @@
     /* ===== CONTENU PRINCIPAL ===== */
     #screen-main { display: none; }
 
+    /* ===== MODAL OVERLAY (PDF) ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
     /* Onglets de catégories */
     .cat-tabs {
       display: flex; gap: 0.5rem; flex-wrap: wrap;
