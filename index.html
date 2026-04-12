@@ -54,8 +54,8 @@
     #screen-classe {
       min-height: 100vh;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 2rem; position: relative;
+      align-items: center; justify-content: flex-start;
+      padding: 0; position: relative;
     }
 
     /* Bandeau photo lycée — premier tiers */
@@ -67,35 +67,65 @@
       z-index: 0;
     }
 
-    /* Dégradé de transition photo → fond */
+    /* Dégradé léger sur la photo */
     #screen-classe::after {
       content: ''; position: absolute;
       top: 0; left: 0; right: 0;
       height: 33vh;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, var(--bg) 100%);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.6) 100%);
       z-index: 1;
       pointer-events: none;
     }
 
-    /* Barre du haut : logo gauche | titre centre | thème droite */
+    /* Zone photo avec titre en bas */
+    .screen-hero {
+      position: relative; z-index: 2;
+      width: 100%; height: 33vh;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 1.5rem;
+    }
+
+    /* Titre dans la zone photo */
+    .screen-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900; line-height: 1; letter-spacing: -0.02em;
+      text-align: center; white-space: nowrap;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8);
+      margin: 0;
+    }
+    .screen-title em { color: #93c5fd; font-style: normal; }
+
+    /* Zone des cartes — fond bleu clair */
+    .classe-grid-wrap {
+      position: relative; z-index: 2;
+      width: 100%; display: flex; flex-direction: column; align-items: center;
+      padding: 2rem 2rem 3rem;
+      background: #dbeafe;
+      flex: 1;
+    }
+
+    .screen-sub {
+      color: #4b6fa8; font-size: 0.95rem;
+      text-align: center; margin-bottom: 2rem;
+    }
+
+    /* Barre du haut */
     .screen-topbar {
       position: absolute; top: 0; left: 0; right: 0;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.5rem 2rem;
-      z-index: 3;
+      padding: 1.5rem 2rem; z-index: 3;
     }
-    .screen-topbar-left {
-      display: flex; align-items: center; gap: 0.75rem;
-    }
+    .screen-topbar-left { display: flex; align-items: center; gap: 0.75rem; }
     .screen-topbar-left img {
       width: 56px; height: 56px; object-fit: contain;
       border-radius: 50%; background: white; padding: 4px;
       box-shadow: 0 2px 12px rgba(37,99,235,0.15);
     }
     .screen-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-weight: 700; color: #fff;
-      letter-spacing: -0.01em; line-height: 1.2;
+      font-family: 'Playfair Display', serif; font-size: 1rem;
+      font-weight: 700; color: #fff; letter-spacing: -0.01em; line-height: 1.2;
       text-shadow: 0 1px 4px rgba(0,0,0,0.4);
     }
     .screen-logo span { color: #93c5fd; }
@@ -104,22 +134,9 @@
       font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.8);
     }
 
-    /* Titre centré */
-    .screen-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 900; line-height: 1.1; letter-spacing: -0.03em;
-      text-align: center; margin-bottom: 0.75rem;
-    }
-    .screen-title em { color: var(--accent); font-style: normal; }
-    .screen-sub {
-      color: var(--muted); font-size: 0.95rem;
-      text-align: center; margin-bottom: 2.5rem;
-    }
-
     .classe-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 1rem; width: 100%; max-width: 800px;
     }
     .classe-card {
@@ -427,9 +444,14 @@
     <button class="theme-btn-home" id="themeHome" onclick="toggleTheme()">🌙</button>
   </div>
 
-  <!-- CENTRE : titre -->
-  <h1 class="screen-title">Choisissez<br>votre <em>classe</em></h1>
-  <p class="screen-sub">Accédez directement à vos cours, exercices et évaluations.</p>
+  <!-- ZONE PHOTO avec titre en bas -->
+  <div class="screen-hero">
+    <h1 class="screen-title">Choisissez votre <em>classe</em></h1>
+  </div>
+
+  <!-- CENTRE : grille -->
+  <div class="classe-grid-wrap">
+    <p class="screen-sub">Accédez directement à vos cours, exercices et évaluations.</p>
 
   <div class="classe-grid">
 
@@ -476,10 +498,9 @@
     </div>
 
   </div>
+  </div>
 
 </div>
-
-<!-- ===================== MODAL LECTEUR PDF ===================== -->
 <div class="modal-overlay" id="pdfOverlay">
   <div class="pdf-modal">
     <div class="pdf-modal-header">
