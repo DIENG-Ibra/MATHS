@@ -56,6 +56,7 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: flex-start;
       padding: 0; position: relative;
+      background: var(--bg);
     }
 
     /* Bandeau photo lycée — premier tiers */
@@ -74,8 +75,8 @@
       height: 33vh;
       background: linear-gradient(to bottom,
         rgba(0,0,0,0.15) 0%,
-        rgba(0,0,0,0.45) 70%,
-        #dbeafe 100%);
+        rgba(0,0,0,0.5) 75%,
+        transparent 100%);
       z-index: 1;
       pointer-events: none;
     }
@@ -105,13 +106,14 @@
       position: relative; z-index: 2;
       width: 100%; display: flex; flex-direction: column; align-items: center;
       padding: 2rem 2rem 3rem;
-      background: #dbeafe;
+      background: var(--accent-light);
       flex: 1;
     }
 
     .screen-sub {
-      color: #4b6fa8; font-size: 0.95rem;
+      color: var(--accent); font-size: 0.95rem;
       text-align: center; margin-bottom: 2rem;
+      opacity: 0.85;
     }
 
     /* Barre du haut */
