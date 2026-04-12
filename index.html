@@ -964,39 +964,15 @@ function dropboxDirectLink(key, rlkey, filename) {
   return `https://www.dropbox.com/scl/fi/${key}/${encodeURIComponent(filename)}?rlkey=${rlkey}&dl=1`;
 }
 
-// Charger les fichiers d'un dossier Dropbox via l'API publique
+// Charger les fichiers via la fonction Netlify
 async function loadDropboxFolder(classe) {
-  const folder = DROPBOX_FOLDERS[classe];
-  if (!folder) return [];
-  const url = `https://www.dropbox.com/scl/fo/${folder.key}?rlkey=${folder.rlkey}&dl=0`;
-  // On utilise un proxy CORS pour lire le contenu du dossier
   try {
-    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-    const data = await res.json();
-    const html = data.contents;
-    // Parser les noms de fichiers depuis la page HTML Dropbox
-    const matches = [...html.matchAll(/"filename":"([^"]+\.pdf)"/gi)];
-    const files = matches.map((m, i) => {
-      const filename = m[1];
-      const title = filename.replace(/\.pdf$/i, '').replace(/_/g, ' ');
-      const cat = detectCat(filename);
-      return {
-        id: `db_${classe}_${i}`,
-        title,
-        desc: '',
-        classe,
-        cat,
-        catBase: cat,
-        fileName: filename,
-        ext: 'pdf',
-        dropboxKey: folder.key,
-        dropboxRlkey: folder.rlkey,
-        dropboxFile: filename,
-      };
-    });
-    return files;
+    const url = `/.netlify/functions/dropbox?classe=${encodeURIComponent(classe)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Erreur réseau');
+    return await res.json();
   } catch(e) {
-    console.error('Erreur Dropbox:', e);
+    console.error('Erreur chargement:', e);
     return [];
   }
 }
@@ -1093,14 +1069,10 @@ async function dlDoc(id) {
   const allDocs = await getDocsForClasse(classeActive);
   const d = allDocs.find(x => x.id === id);
   if (!d) return;
-
-  if (d.dropboxFile) {
-    // Lien de prévisualisation Dropbox
-    const previewUrl  = `https://www.dropbox.com/scl/fi/${d.dropboxKey}/${encodeURIComponent(d.dropboxFile)}?rlkey=${d.dropboxRlkey}&dl=0`;
-    const downloadUrl = `https://www.dropbox.com/scl/fi/${d.dropboxKey}/${encodeURIComponent(d.dropboxFile)}?rlkey=${d.dropboxRlkey}&dl=1`;
+  if (d.previewUrl) {
     document.getElementById('pdfTitle').textContent = d.title;
-    document.getElementById('pdfFrame').src         = previewUrl;
-    document.getElementById('pdfDownloadBtn').href  = downloadUrl;
+    document.getElementById('pdfFrame').src         = d.previewUrl;
+    document.getElementById('pdfDownloadBtn').href  = d.downloadUrl || d.previewUrl;
     document.getElementById('pdfOverlay').classList.add('open');
   } else if (d.driveId) {
     const previewUrl  = `https://drive.google.com/file/d/${d.driveId}/preview`;
