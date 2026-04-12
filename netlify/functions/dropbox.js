@@ -5,7 +5,7 @@ function getAccessToken() {
   return new Promise((resolve, reject) => {
     const data = new URLSearchParams({
       grant_type: 'refresh_token',
-      refresh_token: '_zXbxpgCxTUAAAAAAAAAAAAYqIsKz75aQuPicmUyTaKMHT2GDejTvnOSb7MvU06tJR',
+      refresh_token: process.env.DROPBOX_REFRESH_TOKEN,
       client_id: process.env.DROPBOX_APP_KEY,
       client_secret: process.env.DROPBOX_APP_SECRET,
     }).toString();
