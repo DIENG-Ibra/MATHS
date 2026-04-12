@@ -596,26 +596,33 @@ document.getElementById('catTabs').addEventListener('click', e => {
 const GITHUB_BASE = 'https://raw.githubusercontent.com/DIENG-Ibra/MATHS/main';
 
 function makeFileUrls(lien) {
-  // Lien GitHub raw → affiche le PDF directement dans le navigateur
   return { previewUrl: lien, downloadUrl: lien };
 }
 
 // Alias pour compatibilité
 const makeDropboxUrls = makeFileUrls;
 
+function githubPDF(dossier, fichier) {
+  const encoded = encodeURIComponent(fichier);
+  const raw = `https://raw.githubusercontent.com/DIENG-Ibra/MATHS/main/${dossier}/${encoded}`;
+  // Utiliser Google Docs viewer pour afficher le PDF dans l'iframe
+  const preview = `https://docs.google.com/viewer?url=${encodeURIComponent(raw)}&embedded=true`;
+  return { previewUrl: preview, downloadUrl: raw };
+}
+
 const DOCS_DROPBOX = {
   'Tle Spécialité': [
     {
       id: '1', title: 'S1 - Cours Récurrence et Suites', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
-      ...makeFileUrls(`${GITHUB_BASE}/Tle-Specialite/S1 - Cours Récurrence et Suites.pdf`),
+      ...githubPDF('Tle-Specialite', 'S1 - Cours Récurrence et Suites.pdf'),
     },
     {
       id: '2', title: 'S2 - Cours Limites de fonction', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
-      ...makeFileUrls(`${GITHUB_BASE}/Tle-Specialite/S2 - Cours Limites de fonction.pdf`),
+      ...githubPDF('Tle-Specialite', 'S2 - Cours Limites de fonction.pdf'),
     },
     {
       id: '3', title: 'S3 - Cours Continuité et convexité', cat: 'Cours', catBase: 'Cours', ext: 'pdf',
-      ...makeFileUrls(`${GITHUB_BASE}/Tle-Specialite/S3 - Cours Continuité et convexité.pdf`),
+      ...githubPDF('Tle-Specialite', 'S3 - Cours Continuité et convexité.pdf'),
     },
   ],
   'Tle STMG': [],
