@@ -72,7 +72,10 @@
       content: ''; position: absolute;
       top: 0; left: 0; right: 0;
       height: 33vh;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.6) 100%);
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.15) 0%,
+        rgba(0,0,0,0.45) 70%,
+        #dbeafe 100%);
       z-index: 1;
       pointer-events: none;
     }
@@ -119,19 +122,22 @@
     }
     .screen-topbar-left { display: flex; align-items: center; gap: 0.75rem; }
     .screen-topbar-left img {
-      width: 56px; height: 56px; object-fit: contain;
-      border-radius: 50%; background: white; padding: 4px;
-      box-shadow: 0 2px 12px rgba(37,99,235,0.15);
+      width: 68px; height: 68px; object-fit: contain;
+      border-radius: 50%; background: white; padding: 3px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      border: 2.5px solid rgba(255,255,255,1);
     }
     .screen-logo {
-      font-family: 'Playfair Display', serif; font-size: 1rem;
+      font-family: 'Playfair Display', serif; font-size: 1.3rem;
       font-weight: 700; color: #fff; letter-spacing: -0.01em; line-height: 1.2;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9);
     }
-    .screen-logo span { color: #93c5fd; }
+    .screen-logo span { color: #bfdbfe; }
     .screen-logo small {
       display: block; font-family: 'DM Sans', sans-serif;
-      font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.8);
+      font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,1);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+      letter-spacing: 0.02em;
     }
 
     .classe-grid {
