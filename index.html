@@ -62,12 +62,34 @@
       background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(59,130,246,0.10) 0%, transparent 70%);
       pointer-events: none;
     }
+
+    /* Barre du haut : logo gauche | titre centre | thème droite */
+    .screen-topbar {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 2rem;
+      z-index: 2;
+    }
+    .screen-topbar-left {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .screen-topbar-left img {
+      width: 56px; height: 56px; object-fit: contain;
+      border-radius: 50%; background: white; padding: 4px;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.15);
+    }
     .screen-logo {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; font-weight: 700; color: var(--muted);
-      margin-bottom: 2.5rem; letter-spacing: -0.01em;
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; line-height: 1.2;
     }
     .screen-logo span { color: var(--accent); }
+    .screen-logo small {
+      display: block; font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem; font-weight: 400; color: var(--muted);
+    }
+
+    /* Titre centré */
     .screen-title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1.8rem, 4vw, 3rem);
@@ -136,14 +158,13 @@
     .screen-prof-link:hover { border-color: var(--accent); color: var(--accent); }
 
     .theme-btn-home {
-      position: absolute; top: 1.5rem; right: 1.5rem;
       width: 38px; height: 38px; border-radius: 50%;
       border: 1px solid var(--border); background: var(--surface);
       cursor: pointer; font-size: 1.1rem;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.2s; flex-shrink: 0;
     }
-    .theme-btn-home:hover { border-color: var(--accent); }
+    .theme-btn-home:hover { border-color: var(--accent); background: var(--surface2); }
 
     /* ===== HEADER ===== */
     header {
@@ -447,9 +468,23 @@
 
 <!-- ===================== ÉCRAN SÉLECTION CLASSE ===================== -->
 <div id="screen-classe">
-  <button class="theme-btn-home" id="themeHome" onclick="toggleTheme()">🌙</button>
 
-  <div class="screen-logo">M.<span> Dieng</span> · Lycée Paul Ricoeur</div>
+  <!-- BARRE DU HAUT -->
+  <div class="screen-topbar">
+    <!-- GAUCHE : logo + nom -->
+    <div class="screen-topbar-left">
+      <img src="https://raw.githubusercontent.com/DIENG-Ibra/MATHS/main/logo.png"
+           alt="Institut Paul Ricoeur"/>
+      <div class="screen-logo">
+        M.<span> Dieng</span>
+        <small>Lycée Paul Ricoeur</small>
+      </div>
+    </div>
+    <!-- DROITE : bouton thème -->
+    <button class="theme-btn-home" id="themeHome" onclick="toggleTheme()">🌙</button>
+  </div>
+
+  <!-- CENTRE : titre -->
   <h1 class="screen-title">Choisissez<br>votre <em>classe</em></h1>
   <p class="screen-sub">Accédez directement à vos cours, exercices et évaluations.</p>
 
@@ -900,11 +935,174 @@ function iconSVG(ext) {
 }
 
 // ============================================================
-//  LECTEUR PDF
+//  CONFIGURATION DROPBOX
 // ============================================================
-function dlDoc(id) {
-  const d = docs.find(x => x.id === id);
-  if (d && d.driveId) {
+const DROPBOX_FOLDERS = {
+  'Tle Spécialité':      { key: 'aizefsrub1cw3s55i71ru', rlkey: 'y54y7wjhag1vn8vhwhr51l05l' },
+  'Tle STMG':            { key: 'c95tbi41vkw8pjzdfvpkx', rlkey: 'awq9p8cu8tppzj7ipjyuic8z8' },
+  'Tle Complémentaires': { key: 'y46qn2dueqcrka8l0htry', rlkey: 'ixy0495clh21z8k6aszn2qwpf' },
+  '1ère Spécialité':     { key: 't8d9gdwaltxtikiqo5a7v', rlkey: 'p321pxcg2hhrw0qye2yfibdbp' },
+  '1ère STMG':           { key: '8lbllrhdfbwojmtooavrv', rlkey: 'tya6tc6f0chhbtsd395kbxpa6' },
+  '1ère Spécifique':     { key: '1leove3uo0nw6wp2osiit', rlkey: 'k2p3b3bdc7ze6p0mr1seei27h' },
+};
+
+// Catégories détectées automatiquement depuis le nom du fichier
+function detectCat(name) {
+  const n = name.toLowerCase();
+  if (n.includes('cours') || n.includes('s1') || n.includes('s2') || n.includes('s3') ||
+      n.includes('s4') || n.includes('s5') || n.includes('s6') || n.includes('s7') ||
+      n.includes('s8') || n.includes('s9')) return 'Cours';
+  if (n.includes('eval') || n.includes('dst') || n.includes('bac') || n.includes('controle') || n.includes('devoir')) return 'Évaluation';
+  if (n.includes('exo') || n.includes('exercice') || n.includes('td') || n.includes('qcm')) return 'Exercices';
+  return 'Autres';
+}
+
+function detectCatBase(cat) { return cat; }
+
+// Convertir lien Dropbox en lien direct de téléchargement
+function dropboxDirectLink(key, rlkey, filename) {
+  return `https://www.dropbox.com/scl/fi/${key}/${encodeURIComponent(filename)}?rlkey=${rlkey}&dl=1`;
+}
+
+// Charger les fichiers d'un dossier Dropbox via l'API publique
+async function loadDropboxFolder(classe) {
+  const folder = DROPBOX_FOLDERS[classe];
+  if (!folder) return [];
+  const url = `https://www.dropbox.com/scl/fo/${folder.key}?rlkey=${folder.rlkey}&dl=0`;
+  // On utilise un proxy CORS pour lire le contenu du dossier
+  try {
+    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    const data = await res.json();
+    const html = data.contents;
+    // Parser les noms de fichiers depuis la page HTML Dropbox
+    const matches = [...html.matchAll(/"filename":"([^"]+\.pdf)"/gi)];
+    const files = matches.map((m, i) => {
+      const filename = m[1];
+      const title = filename.replace(/\.pdf$/i, '').replace(/_/g, ' ');
+      const cat = detectCat(filename);
+      return {
+        id: `db_${classe}_${i}`,
+        title,
+        desc: '',
+        classe,
+        cat,
+        catBase: cat,
+        fileName: filename,
+        ext: 'pdf',
+        dropboxKey: folder.key,
+        dropboxRlkey: folder.rlkey,
+        dropboxFile: filename,
+      };
+    });
+    return files;
+  } catch(e) {
+    console.error('Erreur Dropbox:', e);
+    return [];
+  }
+}
+
+// Cache des fichiers Dropbox par classe
+const dropboxCache = {};
+
+async function getDocsForClasse(classe) {
+  if (dropboxCache[classe]) return dropboxCache[classe];
+  const files = await loadDropboxFolder(classe);
+  dropboxCache[classe] = files;
+  return files;
+}
+
+// ============================================================
+//  RENDU DOCUMENTS (version Dropbox)
+// ============================================================
+async function renderDocs() {
+  if (!classeActive) return;
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const list = document.getElementById('docsList');
+
+  // Afficher chargement
+  list.innerHTML = `<div class="empty"><div class="ei">⏳</div><p>Chargement des documents…</p></div>`;
+
+  let allDocs = await getDocsForClasse(classeActive);
+
+  let filtered = allDocs.filter(d => {
+    if (catActive !== 'all' && d.catBase !== catActive) return false;
+    if (q && !d.title.toLowerCase().includes(q) && !d.cat.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const catName = catActive === 'all' ? 'Tous les documents' : catActive;
+  document.getElementById('docsTitle').textContent = catName;
+  document.getElementById('docCount').textContent =
+    `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty">
+      <div class="ei">📭</div>
+      <p>Aucun document disponible pour le moment.<br>
+      Déposez des fichiers PDF dans le dossier Dropbox <strong>${classeActive}</strong>.</p>
+    </div>`;
+    return;
+  }
+
+  const sorted = [...filtered].sort((a, b) =>
+    a.title.localeCompare(b.title, 'fr', { numeric: true })
+  );
+
+  const rows = sorted.map((d, i) => `
+    <div class="doc-row" style="animation-delay:${i*0.03}s">
+      <span class="doc-row-num">${i + 1}</span>
+      <div class="doc-row-icon">${iconSVG(d.ext)}</div>
+      <div class="doc-row-info">
+        <span class="doc-row-title" onclick="dlDoc('${d.id}')">${d.title}</span>
+        ${d.desc ? `<div class="doc-row-desc">${d.desc}</div>` : ''}
+      </div>
+      <div class="doc-row-right">
+        <span class="badge badge-${d.catBase.toLowerCase()}">${d.cat}</span>
+        ${isProf ? `<button class="btn-del" onclick="delDoc('${d.id}')" title="Supprimer">🗑</button>` : ''}
+      </div>
+    </div>`).join('');
+
+  list.innerHTML = `
+    <div class="docs-bloc">
+      <div class="docs-bloc-header">
+        <span>${filtered.length} document${filtered.length > 1 ? 's' : ''}</span>
+        <span>Cliquer sur le titre pour consulter</span>
+      </div>
+      ${rows}
+    </div>`;
+}
+
+function iconSVG(ext) {
+  const colors = { pdf:'#e53e3e', tex:'#2563eb', docx:'#2563eb', doc:'#2563eb', pptx:'#d97706', zip:'#64748b', gz:'#64748b', png:'#16a34a', jpg:'#16a34a', jpeg:'#16a34a' };
+  const labels = { pdf:'PDF', tex:'TEX', docx:'DOC', doc:'DOC', pptx:'PPT', zip:'ZIP', gz:'GZ', png:'IMG', jpg:'IMG', jpeg:'IMG' };
+  const color = colors[ext] || '#64748b';
+  const label = labels[ext] || ext.toUpperCase().slice(0,3);
+  return `<svg viewBox="0 0 38 46" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="30" height="40" rx="4" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+    <path d="M22 1 L31 10 L22 10 Z" fill="${color}" opacity="0.15"/>
+    <path d="M22 1 L22 10 L31 10" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+    <rect x="0" y="28" width="38" height="14" rx="3" fill="${color}"/>
+    <text x="19" y="38.5" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="white" letter-spacing="0.5">${label}</text>
+  </svg>`;
+}
+
+// ============================================================
+//  LECTEUR PDF (Dropbox)
+// ============================================================
+async function dlDoc(id) {
+  const allDocs = await getDocsForClasse(classeActive);
+  const d = allDocs.find(x => x.id === id);
+  if (!d) return;
+
+  if (d.dropboxFile) {
+    // Lien de prévisualisation Dropbox
+    const previewUrl  = `https://www.dropbox.com/scl/fi/${d.dropboxKey}/${encodeURIComponent(d.dropboxFile)}?rlkey=${d.dropboxRlkey}&dl=0`;
+    const downloadUrl = `https://www.dropbox.com/scl/fi/${d.dropboxKey}/${encodeURIComponent(d.dropboxFile)}?rlkey=${d.dropboxRlkey}&dl=1`;
+    document.getElementById('pdfTitle').textContent = d.title;
+    document.getElementById('pdfFrame').src         = previewUrl;
+    document.getElementById('pdfDownloadBtn').href  = downloadUrl;
+    document.getElementById('pdfOverlay').classList.add('open');
+  } else if (d.driveId) {
     const previewUrl  = `https://drive.google.com/file/d/${d.driveId}/preview`;
     const downloadUrl = `https://drive.google.com/uc?export=download&id=${d.driveId}`;
     document.getElementById('pdfTitle').textContent = d.title;
@@ -912,9 +1110,10 @@ function dlDoc(id) {
     document.getElementById('pdfDownloadBtn').href  = downloadUrl;
     document.getElementById('pdfOverlay').classList.add('open');
   } else {
-    toast(`⏳ Lien non encore disponible pour ce document.`, 'err');
+    toast('⏳ Lien non encore disponible.', 'err');
   }
 }
+
 function fermerPDF() {
   document.getElementById('pdfOverlay').classList.remove('open');
   document.getElementById('pdfFrame').src = '';
@@ -922,14 +1121,9 @@ function fermerPDF() {
 document.getElementById('pdfOverlay').addEventListener('click', function(e) {
   if (e.target === this) fermerPDF();
 });
+
 function delDoc(id) {
-  if (!isProf) return;
-  const d = docs.find(x => x.id === id);
-  if (!confirm(`Supprimer "${d.title}" ?`)) return;
-  docs = docs.filter(x => x.id !== id);
-  localStorage.setItem('dieng_docs2', JSON.stringify(docs));
-  renderDocs();
-  toast('🗑 Document supprimé.', 'err');
+  toast('🗑 Pour supprimer un fichier, retirez-le directement de votre dossier Dropbox.', 'err');
 }
 
 // ============================================================
@@ -940,24 +1134,6 @@ function toast(msg, type='ok') {
   t.textContent = msg;
   t.className = `toast ${type} show`;
   setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-// ============================================================
-//  DONNÉES DE DÉMO
-// ============================================================
-if (!docs.length) {
-  docs = [
-    { id:10, title:'S1 — Récurrence et Limites de Suites', desc:'Principe de récurrence, limites finies et infinies, formes indéterminées, suites monotones', classe:'Tle Spécialité', cat:'Cours', catBase:'Cours', fileName:'COURS_TLE_SPE___DIENG.pdf', ext:'pdf', date:'11 avr. 2026', driveId:'1WhxOmK_xxdKuv35lmjqDz0QI98pr3G5N' },
-    { id:1, title:'S9 — Calcul Intégral (IPP)', desc:'Cours complet, 7 familles de fonctions', classe:'Tle Spécialité', cat:'Cours', catBase:'Cours', fileName:'IPP.pdf', ext:'pdf', date:'10 avr. 2026' },
-    { id:2, title:'DST Probabilités Conditionnelles', desc:'Sujet A + Sujet B', classe:'Tle Spécialité', cat:'Évaluation', catBase:'Évaluation', fileName:'DST.pdf', ext:'pdf', date:'9 avr. 2026' },
-    { id:3, title:'Correction DST Probabilités', desc:'Avec arbres de probabilité', classe:'Tle Spécialité', cat:'Cours', catBase:'Cours', fileName:'corr.pdf', ext:'pdf', date:'9 avr. 2026' },
-    { id:4, title:'QCM Automatismes', desc:'Réponses entourées en rouge', classe:'1ère STMG', cat:'Exercices', catBase:'Exercices', fileName:'QCM.tex', ext:'tex', date:'8 avr. 2026' },
-    { id:5, title:'Révisions — Dérivées & Fonctions', desc:'Synthèse des 5 séquences', classe:'1ère Spécialité', cat:'Cours', catBase:'Cours', fileName:'rev.pdf', ext:'pdf', date:'7 avr. 2026' },
-    { id:6, title:'Évaluation Continuité & Convexité', desc:'f(x)=x³−3x²−9x+5', classe:'Tle Complémentaires', cat:'Évaluation', catBase:'Évaluation', fileName:'eval.pdf', ext:'pdf', date:'6 avr. 2026' },
-    { id:7, title:'Exercices Suites Géométriques', desc:'', classe:'1ère Spécifique', cat:'Exercices', catBase:'Exercices', fileName:'suites.pdf', ext:'pdf', date:'5 avr. 2026' },
-    { id:8, title:'Cours Loi Binomiale', desc:'Avec exemples et applications', classe:'Tle STMG', cat:'Cours', catBase:'Cours', fileName:'binom.pdf', ext:'pdf', date:'4 avr. 2026' },
-  ];
-  localStorage.setItem('dieng_docs2', JSON.stringify(docs));
 }
 </script>
 </body>
