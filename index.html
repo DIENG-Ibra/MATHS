@@ -451,10 +451,47 @@
     .toast.ok  { border-left: 3px solid var(--success); }
     .toast.err { border-left: 3px solid var(--danger); }
 
-    @media (max-width: 580px) {
-      .upload-meta { grid-template-columns: 1fr; }
-      .classe-grid { grid-template-columns: 1fr; }
-      .doc-item { flex-wrap: wrap; }
+    /* ===== RESPONSIVE ===== */
+
+    /* Mobile (< 480px) — téléphone */
+    @media (max-width: 480px) {
+      .classe-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+      .screen-title { font-size: 1.5rem; }
+      .screen-topbar { padding: 1rem 1rem; }
+      .screen-topbar-left img { width: 48px; height: 48px; }
+      .screen-logo { font-size: 0.95rem; }
+      .screen-logo small { font-size: 0.68rem; }
+      #screen-classe::before, #screen-classe::after { height: 38vh; }
+      .screen-hero { height: 38vh; }
+      .classe-grid-wrap { padding: 1.25rem 1rem 2rem; }
+      .doc-row { padding: 0.7rem 0.9rem; gap: 0.6rem; }
+      .doc-row-title { font-size: 0.82rem; }
+      #view-docs > div { padding: 1rem; }
+      .docs-title { font-size: 1.1rem; }
+      .cat-tabs { padding: 0.75rem 0.75rem 0; gap: 0.25rem; }
+      .cat-tab { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
+      header { padding: 0 0.75rem; }
+      .pdf-modal { width: 100vw; height: 100vh; border-radius: 0; }
+    }
+
+    /* Tablette (481px – 768px) — iPad portrait */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .classe-grid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+      .screen-title { font-size: 1.8rem; }
+      .classe-grid-wrap { padding: 1.5rem 1.25rem 2.5rem; }
+      .doc-row { padding: 0.75rem 1rem; }
+      #view-docs > div { padding: 1.25rem; }
+    }
+
+    /* Tablette landscape / petit desktop (769px – 1024px) — iPad paysage */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .classe-grid { grid-template-columns: repeat(3, 1fr); max-width: 900px; }
+      .classe-grid-wrap { padding: 2rem 1.5rem 3rem; }
+    }
+
+    /* Desktop (> 1024px) */
+    @media (min-width: 1025px) {
+      .classe-grid { grid-template-columns: repeat(3, 1fr); max-width: 860px; }
     }
   </style>
 </head>
