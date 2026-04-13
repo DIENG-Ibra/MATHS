@@ -388,28 +388,6 @@
     /* ===== MODAL PDF ===== */
     .pdf-modal {
       background: var(--surface); border-radius: 16px;
-      width: 95vw; max-width: 900px; height: 90vh;
-      display: flex; flex-direction: column;
-      overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.4);
-      animation: popIn 0.25s ease;
-    }
-    .pdf-modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .pdf-modal-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-weight: 700;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      max-width: 60%;
-    }
-    .pdf-frame-wrap { flex: 1; overflow: hidden; }
-    .pdf-frame-wrap iframe { width: 100%; height: 100%; border: none; }
-
-    /* ===== MODAL PDF ===== */
-    .pdf-modal {
-      background: var(--surface); border-radius: 16px;
       width: 95vw; max-width: 960px; height: 92vh;
       display: flex; flex-direction: column;
       overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.4);
@@ -421,17 +399,28 @@
     }
     .pdf-modal-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+      flex-shrink: 0; gap: 0.5rem; min-height: 52px;
     }
     .pdf-modal-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-weight: 700;
+      font-size: 0.95rem; font-weight: 700;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      max-width: 65%;
+      flex: 1; min-width: 0;
     }
     .pdf-frame-wrap { flex: 1; overflow: hidden; background: #525659; }
     .pdf-frame-wrap iframe { width: 100%; height: 100%; border: none; }
+
+    /* PDF modal plein écran sur mobile */
+    @media (max-width: 600px) {
+      .pdf-modal {
+        width: 100vw; height: 100vh;
+        border-radius: 0;
+        position: fixed; inset: 0;
+      }
+      .pdf-modal-header { padding: 0.6rem 0.75rem; }
+      .pdf-modal-title { font-size: 0.82rem; }
+    }
 
     /* ===== EMPTY ===== */
     .empty { text-align: center; padding: 3.5rem 2rem; color: var(--muted); }
@@ -576,16 +565,18 @@
   <div class="pdf-modal">
     <div class="pdf-modal-header">
       <span class="pdf-modal-title" id="pdfTitle"></span>
-      <div style="display:flex;gap:0.5rem;align-items:center;">
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0;">
         <a id="pdfDownloadBtn" href="#" target="_blank"
            style="background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;
-                  font-size:0.82rem;font-weight:600;padding:0.4rem 1rem;border-radius:8px;
+                  font-size:0.82rem;font-weight:600;padding:0.4rem 0.8rem;border-radius:8px;
                   text-decoration:none;white-space:nowrap;transition:background 0.2s;">
-          ⬇ Télécharger
+          ⬇
         </a>
         <button onclick="fermerPDF()"
-                style="background:none;border:none;font-size:1.4rem;cursor:pointer;
-                       color:var(--muted);line-height:1;padding:0.2rem 0.4rem;">✕</button>
+                style="background:var(--surface2);border:2px solid var(--border);
+                       font-size:1.2rem;cursor:pointer;color:var(--text);
+                       line-height:1;padding:0.35rem 0.6rem;border-radius:8px;
+                       font-weight:700;flex-shrink:0;">✕</button>
       </div>
     </div>
     <div class="pdf-frame-wrap">
@@ -659,9 +650,15 @@ function toggleTheme() { darkMode = !darkMode; applyTheme(); }
 // ============================================================
 function entrerClasse(classe) {
   classeActive = classe;
+  catActive = 'Cours';
+  localStorage.setItem('dieng_classe', classe);
   document.getElementById('screen-classe').style.display = 'none';
   document.getElementById('screen-main').style.display   = 'block';
   document.getElementById('headerClasse').textContent     = classe;
+  // Synchroniser l'onglet actif visuellement
+  document.querySelectorAll('.cat-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.cat === 'Cours');
+  });
   showTab('docs');
 }
 
@@ -676,7 +673,6 @@ function retourAccueil() {
 // ============================================================
 function showTab(tab) {
   document.getElementById('view-docs').style.display = 'block';
-  document.getElementById('btnDocs').classList.add('active');
   renderDocs();
 }
 
@@ -862,6 +858,14 @@ function toast(msg, type='ok') {
   t.textContent = msg;
   t.className = `toast ${type} show`;
   setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ============================================================
+//  RESTAURER LA CLASSE AU RECHARGEMENT
+// ============================================================
+const _savedClasse = localStorage.getItem('dieng_classe');
+if (_savedClasse && DOCS_DROPBOX[_savedClasse] !== undefined) {
+  entrerClasse(_savedClasse);
 }
 </script>
 </body>
