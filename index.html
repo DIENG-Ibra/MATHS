@@ -304,15 +304,17 @@
     #view-docs { padding: 1.5rem; }
     .docs-header {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.25rem; gap: 0.5rem; flex-wrap: nowrap;
     }
     .docs-title {
       font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700;
+      flex: 1; min-width: 0;
     }
     .doc-count {
       font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted);
       background: var(--surface2); padding: 0.2rem 0.65rem;
       border-radius: 100px; border: 1px solid var(--border);
+      flex-shrink: 0; white-space: nowrap;
     }
     .search-input {
       width: 100%; background: var(--surface); border: 1px solid var(--border);
@@ -334,7 +336,7 @@
       background: var(--surface2); border-bottom: 1px solid var(--border);
       font-family: 'DM Mono', monospace; font-size: 0.72rem;
       color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
-      display: flex; justify-content: space-between;
+      display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;
     }
     .doc-row {
       display: flex; align-items: center; gap: 0.9rem;
@@ -376,6 +378,7 @@
     .badge-cours      { background: rgba(22,163,74,0.1);  color: var(--success); border: 1px solid rgba(22,163,74,0.25); }
     .badge-exercices  { background: rgba(37,99,235,0.1);  color: var(--accent);  border: 1px solid rgba(37,99,235,0.2); }
     .badge-évaluation { background: rgba(217,119,6,0.1);  color: var(--warning); border: 1px solid rgba(217,119,6,0.2); }
+    .badge-annales    { background: rgba(139,92,246,0.1); color: #7c3aed;        border: 1px solid rgba(139,92,246,0.2); }
     .badge-autres     { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
     .btn-del {
       background: none; border: none;
@@ -440,6 +443,75 @@
     .toast.ok  { border-left: 3px solid var(--success); }
     .toast.err { border-left: 3px solid var(--danger); }
 
+    /* ===== BANDEAU ANNONCES ===== */
+    #annoncesBar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .annonce-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.7rem 1.5rem;
+      border-left: 4px solid var(--accent);
+      border-bottom: 1px solid var(--border);
+      background: var(--accent-light);
+      font-size: 0.875rem; line-height: 1.5;
+    }
+    .annonce-item:last-child { border-bottom: none; }
+    .annonce-item.urgente { border-left-color: var(--danger); background: rgba(220,38,38,0.06); }
+    .annonce-item.info    { border-left-color: var(--success); background: rgba(22,163,74,0.06); }
+    .annonce-emoji { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .annonce-texte { flex: 1; color: var(--text); }
+    .annonce-texte strong { color: var(--accent); }
+    .annonce-item.urgente .annonce-texte strong { color: var(--danger); }
+    .annonce-item.info .annonce-texte strong { color: var(--success); }
+    .annonce-date {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--muted); flex-shrink: 0; margin-top: 0.2rem;
+    }
+
+    /* ===== FORMULES ===== */
+    .formules-theme {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; margin-bottom: 1.25rem;
+    }
+    .formules-theme-header {
+      background: var(--accent); color: #fff;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; user-select: none;
+    }
+    .formules-theme-header .fth-arrow {
+      margin-left: auto; transition: transform 0.25s; font-style: normal;
+    }
+    .formules-theme-header.collapsed .fth-arrow { transform: rotate(-90deg); }
+    .formules-theme-body { padding: 0; }
+    .formule-row {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border);
+    }
+    .formule-row:last-child { border-bottom: none; }
+    .formule-row:hover { background: var(--accent-light); }
+    .formule-label {
+      font-size: 0.8rem; color: var(--muted); min-width: 160px;
+      flex-shrink: 0; padding-top: 0.15rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .formule-expr {
+      font-family: 'DM Mono', monospace; font-size: 0.9rem;
+      color: var(--text); flex: 1; line-height: 1.6;
+    }
+    .formule-expr em {
+      color: var(--accent); font-style: normal; font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      .formule-row { flex-direction: column; gap: 0.3rem; }
+      .formule-label { min-width: unset; font-size: 0.72rem; }
+      .formule-expr { font-size: 0.82rem; }
+    }
+
     /* ===== RESPONSIVE ===== */
 
     /* Mobile (< 480px) — téléphone */
@@ -455,8 +527,10 @@
       .classe-grid-wrap { padding: 1.25rem 1rem 2rem; }
       .doc-row { padding: 0.7rem 0.9rem; gap: 0.6rem; }
       .doc-row-title { font-size: 0.82rem; }
-      #view-docs > div { padding: 1rem; }
+      #view-docs > div { padding: 0.75rem; }
       .docs-title { font-size: 1.1rem; }
+      .docs-bloc-header span:last-child { display: none; }
+      .docs-bloc-header { font-size: 0.65rem; letter-spacing: 0.05em; }
       .cat-tabs { padding: 0.75rem 0.75rem 0; gap: 0.25rem; }
       .cat-tab { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
       header { padding: 0 0.75rem; }
@@ -599,11 +673,16 @@
     </div>
   </header>
 
+  <!-- BANDEAU ANNONCES -->
+  <div id="annoncesBar" style="display:none;">
+  </div>
+
   <!-- ONGLETS CATÉGORIES -->
   <div class="cat-tabs" id="catTabs">
     <button class="cat-tab active" data-cat="Cours">Cours</button>
     <button class="cat-tab" data-cat="Exercices">Exercices</button>
     <button class="cat-tab" data-cat="Évaluation">Évaluation</button>
+    <button class="cat-tab" data-cat="Annales">Annales</button>
     <button class="cat-tab" data-cat="Autres">Autres</button>
   </div>
 
@@ -613,6 +692,18 @@
       <div class="docs-header">
         <h2 class="docs-title" id="docsTitle">Documents</h2>
         <span class="doc-count" id="docCount">0</span>
+      </div>
+      <!-- Bouton WIMS uniquement dans l'onglet Exercices -->
+      <div id="wimsBtn" style="display:none; margin-bottom:1rem;">
+        <a id="wimsLink" href="#" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:0.5rem;
+                  background:var(--accent);
+                  color:#fff;font-family:'DM Sans',sans-serif;font-size:0.875rem;
+                  font-weight:600;padding:0.55rem 1.2rem;border-radius:10px;
+                  text-decoration:none;box-shadow:0 4px 12px rgba(37,99,235,0.3);
+                  transition:all 0.2s;">
+          🧮 Accéder aux exercices WIMS
+        </a>
       </div>
       <input class="search-input" id="searchInput" placeholder="🔍  Rechercher…" oninput="renderDocs()"/>
       <div class="docs-list" id="docsList"></div>
@@ -655,10 +746,15 @@ function entrerClasse(classe) {
   document.getElementById('screen-classe').style.display = 'none';
   document.getElementById('screen-main').style.display   = 'block';
   document.getElementById('headerClasse').textContent     = classe;
-  // Synchroniser l'onglet actif visuellement
   document.querySelectorAll('.cat-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.cat === 'Cours');
   });
+  // Masquer l'onglet Annales pour les classes sans épreuve
+  const sansAnnales = ['Tle STMG', 'Tle Complémentaires'];
+  const tabAnnales = document.querySelector('.cat-tab[data-cat="Annales"]');
+  if (tabAnnales) tabAnnales.style.display = sansAnnales.includes(classe) ? 'none' : '';
+  updateWimsBtn(classe);
+  renderAnnonces(classe);
   showTab('docs');
 }
 
@@ -684,12 +780,182 @@ document.getElementById('catTabs').addEventListener('click', e => {
   if (!tab) return;
   catActive = tab.dataset.cat;
   document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t === tab));
-  renderDocs();
+  updateWimsBtn(classeActive);
+  showTab(catActive);
 });
 
 // ============================================================
 // ============================================================
-//  DOCUMENTS (liens GitHub directs)
+//  FORMULES PAR CLASSE
+// ============================================================
+const FORMULES = {
+  'Tle Spécialité': [
+    {
+      theme: '📐 Suites', icone: '📐',
+      formules: [
+        { label: 'Suite arithmétique — terme général', expr: 'uₙ = u₀ + n·r' },
+        { label: 'Suite arithmétique — terme général (depuis uₚ)', expr: 'uₙ = uₚ + (n−p)·r' },
+        { label: 'Suite géométrique — terme général', expr: 'uₙ = u₀ × qⁿ' },
+        { label: 'Suite géométrique — terme général (depuis uₚ)', expr: 'uₙ = uₚ × qⁿ⁻ᵖ' },
+        { label: 'Suite par récurrence', expr: 'uₙ₊₁ = f(uₙ), u₀ donné' },
+        { label: 'Somme arithmétique', expr: 'u₀ + u₁ + … + uₙ = (n+1) × (u₀ + uₙ)/2' },
+        { label: 'Somme géométrique (q ≠ 1)', expr: 'u₀ + u₁ + … + uₙ = u₀ × (1 − qⁿ⁺¹)/(1 − q)' },
+        { label: 'Somme des entiers', expr: '0 + 1 + 2 + … + n = n(n+1)/2' },
+      ]
+    },
+    {
+      theme: '∞ Limites', icone: '∞',
+      formules: [
+        { label: 'Limite en +∞ de xⁿ (n ≥ 1)', expr: 'lim(x→+∞) xⁿ = +∞' },
+        { label: 'Limite en −∞ de xⁿ (n pair)', expr: 'lim(x→−∞) xⁿ = +∞' },
+        { label: 'Limite en −∞ de xⁿ (n impair)', expr: 'lim(x→−∞) xⁿ = −∞' },
+        { label: 'Limite de 1/xⁿ en ±∞', expr: 'lim(x→±∞) 1/xⁿ = 0' },
+        { label: 'Limite de eˣ', expr: 'lim(x→+∞) eˣ = +∞  |  lim(x→−∞) eˣ = 0' },
+        { label: 'Limite de ln(x)', expr: 'lim(x→+∞) ln(x) = +∞  |  lim(x→0⁺) ln(x) = −∞' },
+        { label: 'Croissances comparées', expr: 'lim(x→+∞) eˣ/xⁿ = +∞  |  lim(x→+∞) ln(x)/xⁿ = 0' },
+        { label: 'Règle de la somme', expr: '∞ + ∞ = ∞  |  −∞ + (−∞) = −∞  |  a + ∞ = ∞' },
+        { label: 'Règle du produit', expr: '∞ × ∞ = ∞  |  ∞ × a > 0 = ∞  |  ∞ × a < 0 = −∞' },
+        { label: 'Formes indéterminées', expr: '∞ − ∞  |  0 × ∞  |  ∞/∞  |  0/0' },
+        { label: 'Théorème des gendarmes', expr: 'Si uₙ ≤ vₙ ≤ wₙ et lim uₙ = lim wₙ = L ⟹ lim vₙ = L' },
+      ]
+    },
+    {
+      theme: "f'(x) Dérivées", icone: "f'",
+      formules: [
+        { label: 'Constante k', expr: "f'(x) = 0" },
+        { label: 'xⁿ (n ∈ ℤ)', expr: "f'(x) = n·xⁿ⁻¹" },
+        { label: '√x', expr: "f'(x) = 1/(2√x)" },
+        { label: 'eˣ', expr: "f'(x) = eˣ" },
+        { label: 'ln(x)', expr: "f'(x) = 1/x" },
+        { label: 'sin(x)', expr: "f'(x) = cos(x)" },
+        { label: 'cos(x)', expr: "f'(x) = −sin(x)" },
+        { label: 'Somme u + v', expr: "(u + v)' = u' + v'" },
+        { label: 'Produit u × v', expr: "(u × v)' = u'v + uv'" },
+        { label: 'Quotient u/v', expr: "(u/v)' = (u'v − uv')/v²" },
+        { label: 'Composée u(v(x))', expr: "(u∘v)' = v' × u'(v(x))" },
+        { label: 'Tangente en x₀', expr: 'y = f(x₀) + f\'(x₀)(x − x₀)' },
+      ]
+    },
+    {
+      theme: '∫ Primitives & Intégrales', icone: '∫',
+      formules: [
+        { label: 'Constante k', expr: '∫k dx = kx + C' },
+        { label: 'xⁿ (n ≠ −1)', expr: '∫xⁿ dx = xⁿ⁺¹/(n+1) + C' },
+        { label: '1/x', expr: '∫(1/x) dx = ln|x| + C' },
+        { label: 'eˣ', expr: '∫eˣ dx = eˣ + C' },
+        { label: 'e^(ax+b)', expr: '∫e^(ax+b) dx = (1/a)·e^(ax+b) + C' },
+        { label: '√x', expr: '∫√x dx = (2/3)x^(3/2) + C' },
+        { label: 'Intégrale définie', expr: '∫ₐᵇ f(x) dx = [F(x)]ₐᵇ = F(b) − F(a)' },
+        { label: 'Linéarité', expr: '∫ₐᵇ (αf + βg) dx = α∫ₐᵇf dx + β∫ₐᵇg dx' },
+        { label: 'Relation de Chasles', expr: '∫ₐᵇ f dx = ∫ₐᶜ f dx + ∫ᶜᵇ f dx' },
+        { label: 'Valeur moyenne', expr: 'm = (1/(b−a)) × ∫ₐᵇ f(x) dx' },
+        { label: 'Aire sous la courbe', expr: 'A = |∫ₐᵇ f(x) dx| (en unités d\'aire)' },
+      ]
+    },
+    {
+      theme: '🎲 Probabilités', icone: '🎲',
+      formules: [
+        { label: 'Probabilité conditionnelle', expr: 'P(A|B) = P(A ∩ B) / P(B)' },
+        { label: 'Probabilité de l\'intersection', expr: 'P(A ∩ B) = P(B) × P(A|B)' },
+        { label: 'Probabilités totales', expr: 'P(A) = P(A|B)·P(B) + P(A|B̄)·P(B̄)' },
+        { label: 'Indépendance', expr: 'A et B indépendants ⟺ P(A ∩ B) = P(A)·P(B)' },
+        { label: 'Variable aléatoire — Espérance', expr: 'E(X) = Σ xᵢ·P(X = xᵢ)' },
+        { label: 'Variable aléatoire — Variance', expr: 'V(X) = E(X²) − [E(X)]²' },
+        { label: 'Écart-type', expr: 'σ(X) = √V(X)' },
+        { label: 'Loi de Bernoulli B(p)', expr: 'P(X=1) = p  |  P(X=0) = 1−p  |  E(X) = p' },
+        { label: 'Loi binomiale B(n,p)', expr: 'P(X=k) = C(n,k) × pᵏ × (1−p)ⁿ⁻ᵏ' },
+        { label: 'Binomiale — Espérance', expr: 'E(X) = n·p' },
+        { label: 'Binomiale — Variance', expr: 'V(X) = n·p·(1−p)' },
+        { label: 'Coefficient binomial', expr: 'C(n,k) = n! / (k! × (n−k)!)' },
+      ]
+    },
+  ],
+};
+
+function renderFormules(classe) {
+  const content = document.getElementById('formulesContent');
+  const themes  = FORMULES[classe];
+  if (!themes || !themes.length) {
+    content.innerHTML = `<div class="empty"><div class="ei">📐</div><p>Aucune formule disponible pour cette classe.</p></div>`;
+    return;
+  }
+  content.innerHTML = themes.map((t, ti) => `
+    <div class="formules-theme">
+      <div class="formules-theme-header" onclick="toggleTheme(${ti})">
+        <span>${t.theme}</span>
+        <em class="fth-arrow">▾</em>
+      </div>
+      <div class="formules-theme-body" id="theme-body-${ti}">
+        ${t.formules.map(f => `
+          <div class="formule-row">
+            <span class="formule-label">${f.label}</span>
+            <span class="formule-expr">${f.expr}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggleTheme(index) {
+  const header = document.querySelector(`.formules-theme-header[onclick="toggleTheme(${index})"]`);
+  const body   = document.getElementById(`theme-body-${index}`);
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  header.classList.toggle('collapsed', isOpen);
+}
+//  type: 'normal' (bleu) | 'urgente' (rouge) | 'info' (vert)
+//  emoji: choix libre
+//  date: optionnel
+// ============================================================
+const ANNONCES = {
+  'Tle Spécialité': [
+    {
+      type: 'urgente',
+      emoji: '📝',
+      texte: '<strong>Contrôle le 15 avril</strong> — Chapitres Limites et Continuité',
+      date: '',
+    },
+    {
+      type: 'info',
+      emoji: '✅',
+      texte: '<strong>Correction S1</strong> disponible dans les documents',
+      date: '',
+    },
+  ],
+  'Tle STMG': [],
+  'Tle Complémentaires': [],
+  '1ère Spécialité': [],
+  '1ère STMG': [],
+  '1ère Spécifique': [],
+};
+
+function renderAnnonces(classe) {
+  const bar  = document.getElementById('annoncesBar');
+  const list = ANNONCES[classe] || [];
+  if (!list.length) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  bar.innerHTML = list.map(a => `
+    <div class="annonce-item ${a.type || ''}">
+      <span class="annonce-emoji">${a.emoji || '📢'}</span>
+      <span class="annonce-texte">${a.texte}</span>
+      ${a.date ? `<span class="annonce-date">${a.date}</span>` : ''}
+    </div>`).join('');
+}
+// ============================================================
+const WIMS_LINKS = {
+  'Tle Spécialité': 'https://euler-ressources.ac-versailles.fr/wims/wims.cgi?module=adm/class/classes&lang=fr&type=authparticipant&class=2449268&subclass=yes',
+  // Ajoutez les autres classes ici quand vous aurez leurs liens
+};
+
+function updateWimsBtn(classe) {
+  const btn = document.getElementById('wimsBtn');
+  const link = document.getElementById('wimsLink');
+  if (WIMS_LINKS[classe] && catActive === 'Exercices') {
+    link.href = WIMS_LINKS[classe];
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
 //  Pour ajouter un fichier : ajoutez une entrée dans DOCS_DROPBOX
 //  Utilisez makeFileUrls() avec le lien GitHub raw
 // ============================================================
@@ -778,8 +1044,7 @@ async function renderDocs() {
   if (!filtered.length) {
     list.innerHTML = `<div class="empty">
       <div class="ei">📭</div>
-      <p>Aucun document disponible pour le moment.<br>
-      Déposez des fichiers PDF dans le dossier Dropbox <strong>${classeActive}</strong>.</p>
+      <p>Aucun document disponible pour le moment.</p>
     </div>`;
     return;
   }
