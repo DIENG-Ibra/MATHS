@@ -742,13 +742,13 @@ function toggleTheme() { darkMode = !darkMode; applyTheme(); }
 // ============================================================
 function entrerClasse(classe) {
   classeActive = classe;
-  catActive = 'Cours';
+  catActive = localStorage.getItem('dieng_cat') || 'Cours';
   localStorage.setItem('dieng_classe', classe);
   document.getElementById('screen-classe').style.display = 'none';
   document.getElementById('screen-main').style.display   = 'block';
   document.getElementById('headerClasse').textContent     = classe;
   document.querySelectorAll('.cat-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.cat === 'Cours');
+    t.classList.toggle('active', t.dataset.cat === catActive);
   });
   // Masquer l'onglet Annales pour les classes sans épreuve
   const sansAnnales = ['Tle STMG', 'Tle Complémentaires'];
@@ -780,6 +780,7 @@ document.getElementById('catTabs').addEventListener('click', e => {
   const tab = e.target.closest('.cat-tab');
   if (!tab) return;
   catActive = tab.dataset.cat;
+  localStorage.setItem('dieng_cat', catActive);
   document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t === tab));
   updateWimsBtn(classeActive);
   showTab(catActive);
@@ -1073,9 +1074,9 @@ const DOCS_DROPBOX = {
     // Décommenter chaque bloc après avoir uploadé le PDF correspondant
     // dans le dossier Tle-Specialite/Evaluations/ sur GitHub
 
-     { id: '23', title: 'Évaluation N° 1 : Démonstrations par Récurrence - Sujet', cat: 'Évaluation', catBase: 'Évaluation', ext: 'pdf',
+     { id: '23', title: 'Évaluation N° 1 - Sujet : Démonstrations par Récurrence', cat: 'Évaluation', catBase: 'Évaluation', ext: 'pdf',
        ...githubPDF('Tle-Specialite/Evaluations', 'Eval-1-Recurrence.pdf') },
-     { id: '24', title: 'Évaluation N° 1 : Démonstrations par Récurrence - Corrigé ', cat: 'Évaluation', catBase: 'Évaluation', ext: 'pdf',
+     { id: '24', title: 'Évaluation N° 1 - Corrigé : Démonstrations par Récurrence', cat: 'Évaluation', catBase: 'Évaluation', ext: 'pdf',
       ...githubPDF('Tle-Specialite/Evaluations', 'Eval-1-Recurrence-Corrige.pdf') },
 
     // { id: '25', title: 'S2 - Évaluation : Limite de fonctions', cat: 'Évaluation', catBase: 'Évaluation', ext: 'pdf',
