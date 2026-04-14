@@ -284,6 +284,7 @@
     /* Onglets de catégories */
     .cat-tabs {
       display: flex; gap: 0.5rem; flex-wrap: wrap;
+      justify-content: center;
       padding: 1.25rem 1.5rem 0;
       border-bottom: 1px solid var(--border);
       background: var(--surface);
@@ -681,7 +682,7 @@
   <div class="cat-tabs" id="catTabs">
     <button class="cat-tab active" data-cat="Cours">Cours</button>
     <button class="cat-tab" data-cat="Exercices">Exercices</button>
-    <button class="cat-tab" data-cat="Évaluation">Évaluation</button>
+    <button class="cat-tab" data-cat="Évaluation">Évaluations</button>
     <button class="cat-tab" data-cat="Annales">Annales</button>
     <button class="cat-tab" data-cat="Autres">Autres</button>
   </div>
@@ -908,18 +909,18 @@ function toggleTheme(index) {
 // ============================================================
 const ANNONCES = {
   'Tle Spécialité': [
-   // {
-     // type: 'urgente',
-    //  emoji: '📝',
-    //  texte: '<strong>Contrôle le 15 avril</strong> — Chapitres Limites et Continuité',
-   //   date: '',
-   // },
-   // {
-   //   type: 'info',
-   //   emoji: '✅',
-   //   texte: '<strong>Correction S1</strong> disponible dans les documents',
-   //   date: '',
-   // },
+    {
+      type: 'urgente',
+      emoji: '📝',
+      texte: '<strong>Contrôle le 15 avril</strong> — Chapitres Limites et Continuité',
+      date: '',
+    },
+    {
+      type: 'info',
+      emoji: '✅',
+      texte: '<strong>Correction S1</strong> disponible dans les documents',
+      date: '',
+    },
   ],
   'Tle STMG': [],
   'Tle Complémentaires': [],
