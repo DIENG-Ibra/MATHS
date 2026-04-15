@@ -910,18 +910,18 @@ function toggleTheme(index) {
 // ============================================================
 const ANNONCES = {
   'Tle Spécialité': [
-    {
-      type: 'urgente',
-      emoji: '📝',
-      texte: '<strong>Contrôle le 15 avril</strong> — Chapitres Limites et Continuité',
-      date: '',
-    },
-    {
-      type: 'info',
-      emoji: '✅',
-      texte: '<strong>Correction S1</strong> disponible dans les documents',
-      date: '',
-    },
+    // {
+    //   type: 'urgente',
+    //   emoji: '📝',
+    //   texte: '<strong>Contrôle le 15 avril</strong> — Chapitres Limites et Continuité',
+    //   date: '',
+    // },
+    // {
+    //   type: 'info',
+    //   emoji: '✅',
+    //   texte: '<strong>Correction S1</strong> disponible dans les documents',
+    //   date: '',
+    // },
   ],
   'Tle STMG': [],
   'Tle Complémentaires': [],
@@ -1168,7 +1168,7 @@ async function renderDocs() {
     return true;
   });
 
-  const catName = catActive === 'all' ? 'Tous les documents' : catActive;
+  const catName = catActive === 'all' ? 'Tous les documents' : catActive === 'Évaluation' ? 'Évaluations' : catActive;
   document.getElementById('docsTitle').textContent = catName;
   document.getElementById('docCount').textContent =
     `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
